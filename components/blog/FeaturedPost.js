@@ -6,7 +6,19 @@ export default function FeaturedPost({ post }) {
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <article className="mt-6 overflow-hidden rounded-3xl bg-[#f2e68b] shadow-lg transition hover:-translate-y-1 hover:shadow-xl md:flex">
+      <article
+        className="
+  mt-6
+  overflow-hidden
+  rounded-3xl
+  bg-gradient-to-br from-[#f6f3b0] to-[#efe48a]
+  shadow-lg
+  transition
+  hover:-translate-y-1
+  hover:shadow-xl
+  md:flex
+"
+      >
         {/* IMAGE */}
         <div className="relative h-64 md:h-auto md:w-1/2">
           {post.cover_image && (
@@ -27,7 +39,17 @@ export default function FeaturedPost({ post }) {
             <p className="mt-3 text-gray-700 leading-relaxed">{excerpt}</p>
           </div>
 
-          <span className="mt-6 inline-block text-sm font-semibold text-emerald-700">
+          <span
+            className="
+  mt-6
+  inline-flex
+  items-center
+  gap-1
+  text-sm
+  font-semibold
+  text-emerald-700
+"
+          >
             Read article →
           </span>
         </div>

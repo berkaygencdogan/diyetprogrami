@@ -7,7 +7,19 @@ export default function BlogGridCard({ post }) {
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <article className="group overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+      <article
+        className="
+  group
+  overflow-hidden
+  rounded-2xl
+  bg-white/95
+  backdrop-blur
+  shadow-md
+  transition
+  hover:-translate-y-1
+  hover:shadow-xl
+"
+      >
         <div className="relative h-52">
           {post.cover_image && (
             <img

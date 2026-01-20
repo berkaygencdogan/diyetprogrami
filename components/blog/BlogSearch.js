@@ -29,7 +29,18 @@ export default function BlogSearch() {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Başlığa göre ara..."
-        className="h-11 w-full rounded-xl border px-4 text-sm focus:border-emerald-500 focus:outline-none"
+        className="
+      h-12 w-full
+      rounded-full
+      border border-gray-300
+      bg-white/90
+      px-5
+      text-sm
+      shadow-sm
+      focus:border-emerald-500
+      focus:ring-2 focus:ring-emerald-200
+      focus:outline-none
+    "
       />
     </div>
   );

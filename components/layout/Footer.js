@@ -58,7 +58,7 @@ export default function Footer() {
             <ul className="mt-3 space-y-2 text-sm">
               <li>
                 <Link
-                  href="/admin/login"
+                  href="/admin-login"
                   className="text-white-600 hover:text-emerald-600"
                 >
                   Admin Girişi

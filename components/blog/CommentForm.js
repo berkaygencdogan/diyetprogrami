@@ -33,7 +33,17 @@ export default function CommentForm({ blogId, parentId = null, onDone }) {
   };
 
   return (
-    <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div
+      className="
+    mt-12
+    rounded-3xl
+    border border-gray-200
+    bg-white/90
+    p-6
+    shadow-lg
+    backdrop-blur
+  "
+    >
       <h3 className="mb-4 text-base font-semibold text-gray-900">
         {parentId ? "Yanıt Yaz" : "Yorum Bırak"}
       </h3>
