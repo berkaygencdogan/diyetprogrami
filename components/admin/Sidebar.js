@@ -1,23 +1,43 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { logout } from "@/lib/auth";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const menu = [
   { name: "Dashboard", href: "/admin" },
+  { name: "Slider", href: "/admin/sliders" },
   { name: "Bloglar", href: "/admin/blogs" },
+  { name: "Kategoriler", href: "/admin/categories" },
   { name: "Yorumlar", href: "/admin/comments" },
+  { name: "Kullanıcılar", href: "/admin/users" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const raw = localStorage.getItem("user");
+    if (raw) setUser(JSON.parse(raw));
+  }, []);
+
+  // 🔐 LOGOUT
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth-change"));
+    router.push("/login");
+  };
+
+  // ❌ Admin değilse erişim yok
+  if (!user || user.role !== "admin") return null;
 
   return (
     <>
-      {/* 🔝 MOBILE TOP BAR */}
+      {/* 🔝 MOBILE FAB */}
       <div className="fixed bottom-4 right-4 z-40 md:hidden">
         <button
           onClick={() => setOpen(true)}
@@ -38,18 +58,18 @@ export default function Sidebar() {
       {/* SIDEBAR */}
       <aside
         className={`
-          fixed z-50 h-full w-64 bg-white border-r transition-transform
+          fixed z-50 flex h-full w-64 flex-col bg-white border-r transition-transform
           md:static md:translate-x-0
           ${open ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* DESKTOP LOGO */}
-        <div className="hidden px-6 py-5 text-xl font-bold text-emerald-600 md:block">
+        {/* LOGO */}
+        <div className="px-6 py-5 text-xl font-bold text-emerald-600">
           DiyetProgramı
         </div>
 
         {/* MENU */}
-        <nav className="mt-4 space-y-1 px-3 md:mt-0">
+        <nav className="flex-1 space-y-1 px-3">
           {menu.map((item) => {
             const active = pathname === item.href;
 
@@ -58,7 +78,7 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className={`block rounded-lg px-4 py-2 text-sm ${
+                className={`block rounded-lg px-4 py-2 text-sm transition ${
                   active
                     ? "bg-emerald-50 font-semibold text-emerald-700"
                     : "text-gray-700 hover:bg-gray-100"
@@ -71,10 +91,10 @@ export default function Sidebar() {
         </nav>
 
         {/* FOOTER */}
-        <div className="mt-auto border-t px-4 py-4">
+        <div className="border-t px-4 py-4">
           <button
             onClick={logout}
-            className="w-full rounded-lg bg-red-50 py-2 text-sm text-red-600"
+            className="w-full rounded-lg bg-red-50 py-2 text-sm font-semibold text-red-600 hover:bg-red-100"
           >
             Çıkış Yap
           </button>

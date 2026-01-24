@@ -3,22 +3,34 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    try {
+    const syncUser = () => {
       const raw = localStorage.getItem("user");
-      if (!raw) return;
+      setUser(raw ? JSON.parse(raw) : null);
+    };
 
-      const user = JSON.parse(raw);
-      if (["admin", "editor"].includes(user.role)) {
-        setIsAdmin(true);
-      }
-    } catch {}
+    syncUser(); // ilk yükleme
+
+    window.addEventListener("auth-change", syncUser);
+
+    return () => {
+      window.removeEventListener("auth-change", syncUser);
+    };
   }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("auth-change"));
+    router.push("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md ring-1 ring-black/5">
@@ -28,44 +40,99 @@ export default function Header() {
           <Image
             src="/images/diyet-logo.png"
             alt="Diyet Programı"
-            width={250}
+            width={220}
             height={40}
             priority
           />
         </Link>
 
         {/* DESKTOP */}
-        <div className="hidden gap-8 md:flex items-center">
+        <div className="hidden items-center gap-6 md:flex">
           <NavLink href="/">Anasayfa</NavLink>
           <NavLink href="/blog">Blog</NavLink>
 
-          {isAdmin && <NavLink href="/admin">Admin</NavLink>}
+          {user ? (
+            <>
+              <NavLink href="/programim">Programım</NavLink>
+              <NavLink
+                href="/favorilerim"
+                className="text-sm font-medium text-gray-700 hover:text-emerald-600"
+              >
+                ❤️ Favorilerim
+              </NavLink>
+
+              <NavLink
+                href="/programim"
+                className="text-sm font-medium text-gray-700 hover:text-emerald-600"
+              >
+                📊 Programım
+              </NavLink>
+
+              {user.role === "admin" && <NavLink href="/admin">Admin</NavLink>}
+
+              <button
+                onClick={logout}
+                className="text-sm font-semibold text-red-500 hover:underline"
+              >
+                Çıkış
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink href="/login">Giriş Yap</NavLink>
+              <NavLink href="/register">Kayıt Ol</NavLink>
+            </>
+          )}
         </div>
 
-        {/* MOBILE BUTTON */}
+        {/* MOBILE */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden h-10 w-10 rounded-lg border border-gray-300 flex items-center justify-center"
+          className="md:hidden h-10 w-10 rounded-lg border flex items-center justify-center"
         >
           ☰
         </button>
       </nav>
 
-      {/* MOBILE MENU */}
       {open && (
-        <div className="md:hidden border-t border-gray-200 bg-white">
-          <div className="flex flex-col px-4 py-3 gap-1">
+        <div className="md:hidden border-t bg-white">
+          <div className="flex flex-col gap-1 px-4 py-3">
             <MobileLink href="/" onClick={() => setOpen(false)}>
               Anasayfa
             </MobileLink>
+
             <MobileLink href="/blog" onClick={() => setOpen(false)}>
               Blog
             </MobileLink>
 
-            {isAdmin && (
-              <MobileLink href="/admin" onClick={() => setOpen(false)}>
-                Admin
-              </MobileLink>
+            {user ? (
+              <>
+                <MobileLink href="/programim" onClick={() => setOpen(false)}>
+                  Programım
+                </MobileLink>
+
+                {user.role === "admin" && (
+                  <MobileLink href="/admin" onClick={() => setOpen(false)}>
+                    Admin
+                  </MobileLink>
+                )}
+
+                <button
+                  onClick={logout}
+                  className="rounded-lg px-3 py-2 text-left text-sm text-red-500"
+                >
+                  Çıkış
+                </button>
+              </>
+            ) : (
+              <>
+                <MobileLink href="/login" onClick={() => setOpen(false)}>
+                  Giriş Yap
+                </MobileLink>
+                <MobileLink href="/register" onClick={() => setOpen(false)}>
+                  Kayıt Ol
+                </MobileLink>
+              </>
             )}
           </div>
         </div>

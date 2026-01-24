@@ -1,43 +1,72 @@
-export default function BlogContentLayout({ title, cover, author, children }) {
+import { calculateReadingTime } from "@/lib/readingTime";
+import Link from "next/link";
+
+export default function BlogContentLayout({
+  title,
+  cover,
+  author,
+  content,
+  tags,
+  children,
+  views,
+}) {
   const coverUrl = cover?.startsWith("http")
     ? cover
     : `${process.env.NEXT_PUBLIC_API_URL}${cover}`;
 
+  const readingTime = calculateReadingTime(content);
+
   return (
-    <main
-      className="
-        relative
-        min-h-screen
-        bg-[url('/images/blog-bg.png')]
-        bg-cover
-        bg-center
-        bg-no-repeat
-      "
-    >
-      {/* BACKGROUND OVERLAY */}
+    <main className="relative min-h-screen bg-[url('/images/blog-bg.png')] bg-cover bg-center bg-no-repeat">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: title,
+            author: {
+              "@type": "Person",
+              name: author,
+            },
+            datePublished: blog.created_at,
+            dateModified: blog.updated_at || blog.created_at,
+            wordCount: content.split(" ").length,
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `${SITE_URL}/blog/${blog.slug}`,
+            },
+          }),
+        }}
+      />
+
       <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px]" />
 
-      {/* COVER */}
-      <div className="relative h-[150px] overflow-hidden"></div>
+      <div className="relative h-[150px] overflow-hidden" />
 
-      {/* CONTENT CARD */}
-      <article
-        className="
-          relative
-          mx-auto
-          -mt-24
-          max-w-[760px]
-          rounded-3xl
-          bg-white/90
-          px-6
-          py-10
-          shadow-2xl
-          backdrop-blur
-        "
-      >
+      <article className="relative mx-auto -mt-24 max-w-[760px] rounded-3xl bg-white/90 px-6 py-10 shadow-2xl backdrop-blur">
         <h1 className="text-3xl font-extrabold text-gray-900">{title}</h1>
 
-        <p className="mt-2 text-sm text-gray-500">Yayınlayan: {author}</p>
+        <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
+          <span>✍️ {author}</span>
+          <span>⏱ {readingTime} dk okuma</span>
+          <span>👁 {views} okunma</span>
+        </div>
+
+        {/* 🔖 TAGS */}
+        {tags?.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {tags.map((t) => (
+              <Link
+                key={t.id}
+                href={`/etiket/${t.slug}`}
+                className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
+              >
+                #{t.name}
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="prose prose-lg mt-8 max-w-none">{children}</div>
       </article>

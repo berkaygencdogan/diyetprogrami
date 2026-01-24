@@ -1,25 +1,27 @@
 import Link from "next/link";
 import { excerptFromHtml } from "@/lib/text";
+import { calculateReadingTime } from "@/lib/readingTime";
 
 export default function BlogGridCard({ post }) {
-  console.log("sad", post);
   const excerpt = excerptFromHtml(post.content, 28);
+  const readingTime = calculateReadingTime(post.content);
 
   return (
     <Link href={`/blog/${post.slug}`}>
       <article
         className="
-  group
-  overflow-hidden
-  rounded-2xl
-  bg-white/95
-  backdrop-blur
-  shadow-md
-  transition
-  hover:-translate-y-1
-  hover:shadow-xl
-"
+          group
+          overflow-hidden
+          rounded-2xl
+          bg-white/95
+          backdrop-blur
+          shadow-md
+          transition
+          hover:-translate-y-1
+          hover:shadow-xl
+        "
       >
+        {/* COVER */}
         <div className="relative h-52">
           {post.cover_image && (
             <img
@@ -35,8 +37,22 @@ export default function BlogGridCard({ post }) {
           {/* BAŞLIK */}
           <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
 
+          {/* META */}
+          <div className="mt-1 flex items-center gap-3 text-xs text-gray-500">
+            <span>⏱ {readingTime} dk okuma</span>
+            <span>👁️ {post.views} okunma</span>
+            {post.created_at && (
+              <>
+                <span>•</span>
+                <span>
+                  {new Date(post.created_at).toLocaleDateString("tr-TR")}
+                </span>
+              </>
+            )}
+          </div>
+
           {/* ÖZET */}
-          <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+          <p className="mt-3 text-sm text-gray-600 leading-relaxed">
             {excerpt}
           </p>
 

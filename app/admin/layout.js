@@ -9,24 +9,24 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === "/admin-login") return;
+    if (pathname === "/login") return;
 
     const token = getToken();
     const user = getUser();
 
     if (!token || !user) {
-      window.location.replace("/admin-login");
+      window.location.replace("/login");
       return;
     }
 
     if (!["editor", "admin"].includes(user.role)) {
-      window.location.replace("/admin-login");
+      window.location.replace("/login");
       return;
     }
   }, [pathname]);
 
   // login sayfasında sidebar yok
-  if (pathname === "/admin-login") {
+  if (pathname === "/login") {
     return children;
   }
 

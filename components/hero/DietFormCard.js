@@ -72,7 +72,7 @@ export default function DietHeroCard() {
     <>
       {/* ================= HERO CARD ================= */}
       <div
-        className="relative mx-auto w-full max-w-[1400px] overflow-hidden rounded-[32px] shadow-[0_30px_80px_rgba(0,0,0,0.12)]"
+        className="relative mx-auto w-full max-w-[1400px] overflow-hidden rounded-[32px]"
         id="form"
       >
         <Image
@@ -161,7 +161,7 @@ export default function DietHeroCard() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 h-12 w-full rounded-xl z-[999] bg-emerald-600 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+                className="mt-2 h-12 w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 transition z-[999] text-sm font-semibold text-white disabled:opacity-60"
               >
                 {loading ? "Hesaplanıyor..." : "Hedefine Ulaş"}
               </button>

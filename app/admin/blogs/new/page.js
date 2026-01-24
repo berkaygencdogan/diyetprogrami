@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createBlog } from "@/lib/adminBlogApi";
 import dynamic from "next/dynamic";
 
@@ -13,11 +13,20 @@ export default function NewBlogPage() {
     title: "",
     cover_image: "",
     content: "",
+    category_id: "",
   });
 
-  const [token] = useState(() =>
-    typeof window !== "undefined" ? localStorage.getItem("token") : null,
-  );
+  const [categories, setCategories] = useState([]);
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    setToken(t);
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`)
+      .then((r) => r.json())
+      .then(setCategories);
+  }, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -41,6 +50,7 @@ export default function NewBlogPage() {
           className="w-full rounded-xl border p-3"
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
+          required
         />
 
         <input
@@ -49,6 +59,21 @@ export default function NewBlogPage() {
           value={form.cover_image}
           onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
         />
+
+        {/* ✅ KATEGORİ – DB */}
+        <select
+          className="w-full rounded-xl border p-3"
+          value={form.category_id}
+          onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+          required
+        >
+          <option value="">Kategori Seç</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
 
         <Editor
           value={form.content}
