@@ -1,4 +1,8 @@
-import { fetchBlogBySlug, fetchComments } from "@/lib/api";
+import {
+  fetchBlogBySlug,
+  fetchComments,
+  getRelatedBlogsByTags,
+} from "@/lib/api";
 import BlogContentLayout from "@/components/blog/BlogContentLayout";
 import CommentForm from "@/components/blog/CommentForm";
 import BlogComments from "@/components/blog/BlogComments";
@@ -25,7 +29,7 @@ function autoLink(content, relatedBlogs) {
 }
 
 export default async function BlogDetailPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   // 1️⃣ BLOG
   const blog = await fetchBlogBySlug(slug);
@@ -54,6 +58,7 @@ export default async function BlogDetailPage({ params }) {
       content={linkedContent}
       tags={blog.tags}
       views={blog.views}
+      blog={blog}
     >
       <FavoriteButton blogId={blog.id} initial={blog.is_favorite} />
       {/* 📑 TOC */}

@@ -9,6 +9,7 @@ export default function BlogContentLayout({
   tags,
   children,
   views,
+  blog,
 }) {
   const coverUrl = cover?.startsWith("http")
     ? cover
@@ -34,7 +35,7 @@ export default function BlogContentLayout({
             wordCount: content.split(" ").length,
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `${SITE_URL}/blog/${blog.slug}`,
+              "@id": `${coverUrl}/blog/${blog.slug}`,
             },
           }),
         }}

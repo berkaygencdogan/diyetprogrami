@@ -53,3 +53,6 @@ img {
 html {
   scroll-behavior: smooth;
 }
+#formzindex {
+  z-index: 999;
+}
