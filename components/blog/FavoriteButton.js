@@ -1,18 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toggleFavorite } from "@/lib/api";
+import { toggleFavorite, checkFavorite } from "@/lib/api";
 
-export default function FavoriteButton({ blogId, initial }) {
-  const [fav, setFav] = useState(initial);
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+export default function FavoriteButton({ blogId }) {
+  const [fav, setFav] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
-  if (!token) return null;
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    if (!t) {
+      setLoading(false);
+      return;
+    }
+
+    setToken(t);
+
+    // 🔍 DB KONTROLÜ
+    checkFavorite(blogId, t)
+      .then((res) => setFav(res.isFavorite))
+      .finally(() => setLoading(false));
+  }, [blogId]);
+
+  if (!token || loading) return null;
 
   const click = async () => {
-    setFav((p) => !p);
-    await toggleFavorite(blogId, token);
+    const next = !fav;
+    setFav(next); // 🔥 optimistic
+
+    try {
+      await toggleFavorite(blogId, token);
+    } catch {
+      setFav(!next); // rollback
+    }
   };
 
   return (

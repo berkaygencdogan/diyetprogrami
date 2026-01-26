@@ -53,7 +53,6 @@ export default function Header() {
 
           {user ? (
             <>
-              <NavLink href="/programim">Programım</NavLink>
               <NavLink
                 href="/favorilerim"
                 className="text-sm font-medium text-gray-700 hover:text-emerald-600"

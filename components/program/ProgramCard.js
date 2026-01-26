@@ -11,11 +11,14 @@ export default function ProgramCard({ program }) {
         </h3>
 
         <p className="mt-2 text-sm text-gray-600">
-          {program.start_weight} kg → {program.target_weight} kg
+          Başlangıç : {program.start_weight} kg → Hedef :{" "}
+          {program.target_weight} kg
         </p>
 
         {program.target_months && (
-          <p className="text-xs text-gray-500">{program.target_months} ay</p>
+          <p className="text-xs text-gray-500">
+            Süre : {program.target_months} Ay
+          </p>
         )}
       </div>
     </Link>

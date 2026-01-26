@@ -66,7 +66,7 @@ export default function DietHeroCard() {
             target_weight:
               payload.goal === "maintain" ? payload.weight : payload.targetKg,
             target_months: payload.months || null,
-            data, // summary + plan
+            data, // ⬅ summary + plan birlikte
           }),
         },
       );
