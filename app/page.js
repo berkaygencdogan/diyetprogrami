@@ -6,29 +6,40 @@ import CategorySections from "@/components/hero/CategorySections";
 import HeroSlider from "@/components/hero/HeroSlider";
 import HomeComments from "@/components/hero/HomeComments";
 import PopularBlogs from "@/components/blog/PopularBlog";
+import Image from 'next/image';
 
 function VerticalAd({ position }) {
   return (
     <div
-      className={`sticky top-28 h-[600px] w-[160px] rounded-xl border bg-gray-50
-      flex items-center justify-center text-xs text-gray-400
+      className={`sticky top-28 h-[600px] w-[160px] rounded-xl border overflow-hidden
       ${position === "left" ? "ml-6" : "mr-6"}`}
     >
-      Dikey Reklam
-      <br />
-      160×600
+ <Image
+  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80"
+  alt="Sağlıklı beslenme ve kilo kontrolü - taze sebzeler ve meyveler"
+  fill
+  className="object-cover"
+/>
     </div>
   );
 }
-
 function BottomBannerAd() {
   return (
-    <div className="h-[90px] w-full rounded-xl border bg-gray-50 flex items-center justify-center text-sm text-gray-400">
-      Banner Reklam Alanı (728×90 / 100%)
+    <div className="my-16">
+      <div className="relative w-full h-[90px] rounded-xl border overflow-hidden">
+<Image
+  src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80"
+  alt="Dengeli beslenme ile formda kalın - meyve sebze tabağı"
+  fill
+  className="object-cover"
+/>    {/* İstersen üstüne yarı saydam CTA katmanı ekle */}
+        {/* <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+          <span className="text-white text-xl font-bold">Şimdi Başla → Ücretsiz Diyet Planı</span>
+        </div> */}
+      </div>
     </div>
   );
 }
-
 export default function HomePage() {
   return (
     <main>
