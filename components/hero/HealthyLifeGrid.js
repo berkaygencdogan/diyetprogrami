@@ -6,7 +6,15 @@ export default function HealthyLifeGrid({ posts }) {
 
   return (
     <section className="mb-20">
-      <h2 className="mb-6 text-lg font-bold">🌿 Sağlıklı Yaşam</h2>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="mb-6 text-lg font-bold">🌿 Sağlıklı Yaşam</h2>
+        <Link
+          href={`/kategori`}
+          className="text-sm font-semibold text-emerald-600 hover:underline"
+        >
+          Tümünü Gör →
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {posts.map((post, i) => (

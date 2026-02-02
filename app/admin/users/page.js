@@ -4,21 +4,33 @@ import { useEffect, useState } from "react";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState(null);
 
-  const load = async () => {
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    setToken(t);
+  }, []);
+
+  const load = async (t) => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/admin/users`,
-      { headers: { Authorization: `Bearer ${token}` } },
+      {
+        headers: {
+          Authorization: `Bearer ${t}`,
+        },
+      },
     );
+
     setUsers(await res.json());
   };
 
   useEffect(() => {
-    load();
-  }, []);
+    if (token) load(token);
+  }, [token]);
 
   const updateRole = async (id, role) => {
+    if (!token) return;
+
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users/${id}`, {
       method: "PUT",
       headers: {
@@ -27,17 +39,22 @@ export default function AdminUsers() {
       },
       body: JSON.stringify({ role }),
     });
-    load();
+
+    load(token);
   };
 
   const remove = async (id) => {
+    if (!token) return;
     if (!confirm("Silmek istiyor musun?")) return;
 
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users/${id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-    load();
+
+    load(token);
   };
 
   return (

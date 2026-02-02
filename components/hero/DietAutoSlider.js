@@ -23,7 +23,15 @@ export default function DietAutoSlider({ posts }) {
 
   return (
     <section className="mb-20">
-      <h2 className="mb-4 text-lg font-bold">🔥 Diyet</h2>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="mb-4 text-lg font-bold">🔥 Diyet</h2>
+        <Link
+          href={`/kategori`}
+          className="text-sm font-semibold text-emerald-600 hover:underline"
+        >
+          Tümünü Gör →
+        </Link>
+      </div>
 
       <Link
         href={`/blog/${post.slug}`}

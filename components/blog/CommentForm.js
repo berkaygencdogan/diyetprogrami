@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -10,14 +10,46 @@ export default function CommentForm({ blogId, parentId = null, onDone }) {
     email: "",
     content: "",
   });
-
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (!success) return;
+
+    const timer = setTimeout(() => {
+      setSuccess(false);
+    }, 3000); // 3 saniye
+
+    return () => clearTimeout(timer);
+  }, [success]);
 
   const submit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+
+    if (!form.name.trim()) {
+      newErrors.name = "Ad alanı zorunludur";
+    }
+
+    if (!form.email.trim()) {
+      newErrors.email = "E-posta alanı zorunludur";
+    }
+
+    if (!form.content.trim()) {
+      newErrors.content = "Yorum alanı boş bırakılamaz";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
     setLoading(true);
 
-    await fetch(`${API_URL}/api/comments`, {
+    const res = await fetch(`${API_URL}/api/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -27,6 +59,13 @@ export default function CommentForm({ blogId, parentId = null, onDone }) {
       }),
     });
 
+    const data = await res.json();
+    if (!res.ok) {
+      setLoading(false);
+      throw new Error(data.error || "Bir hata oluştu");
+    }
+
+    setSuccess(true);
     setForm({ name: "", email: "", content: "" });
     setLoading(false);
     onDone?.();
@@ -53,34 +92,65 @@ export default function CommentForm({ blogId, parentId = null, onDone }) {
           <input
             type="text"
             placeholder="Adınız"
-            required
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="h-11 rounded-xl border border-gray-300 px-4 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+            className={`h-11 rounded-xl border px-4 text-sm outline-none
+    ${
+      errors.name
+        ? "border-red-400 focus:ring-red-100"
+        : "border-gray-300 focus:border-emerald-500 focus:ring-emerald-100"
+    }`}
           />
+
+          {errors.name && (
+            <p className="mt-1 text-xs text-red-600">{errors.name}</p>
+          )}
 
           <input
             type="email"
             placeholder="E-posta (gizli)"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="h-11 rounded-xl border border-gray-300 px-4 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+            className={`h-11 rounded-xl border px-4 text-sm outline-none
+    ${
+      errors.email
+        ? "border-red-400 focus:ring-red-100"
+        : "border-gray-300 focus:border-emerald-500 focus:ring-emerald-100"
+    }`}
           />
+
+          {errors.email && (
+            <p className="mt-1 text-xs text-red-600">{errors.email}</p>
+          )}
         </div>
 
         <textarea
-          placeholder="Yorumunuzu yazın…"
-          required
           rows={4}
+          placeholder="Yorumunuzu yazın…"
           value={form.content}
           onChange={(e) => setForm({ ...form, content: e.target.value })}
-          className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+          className={`w-full resize-none rounded-xl border px-4 py-3 text-sm outline-none
+    ${
+      errors.content
+        ? "border-red-400 focus:ring-red-100"
+        : "border-gray-300 focus:border-emerald-500 focus:ring-emerald-100"
+    }`}
         />
 
+        {errors.content && (
+          <p className="mt-1 text-xs text-red-600">{errors.content}</p>
+        )}
+
         <div className="flex items-center justify-between">
-          <p className="text-xs text-gray-500">
-            Yorumunuz editör onayından sonra yayınlanır.
-          </p>
+          {success ? (
+            <p className="mb-4 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">
+              ✅ Yorumunuz gönderildi. Onaylandıktan sonra yayınlanacaktır.
+            </p>
+          ) : (
+            <p className="text-xs text-gray-500">
+              Yorumunuz editör onayından sonra yayınlanır.
+            </p>
+          )}
 
           <button
             disabled={loading}

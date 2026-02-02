@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createBlog } from "@/lib/adminBlogApi";
 import dynamic from "next/dynamic";
+import TagSelector from "@/components/admin/TagSelector";
 
 const Editor = dynamic(() => import("@/components/admin/Editor"), {
   ssr: false,
@@ -15,9 +16,17 @@ export default function NewBlogPage() {
     content: "",
     category_id: "",
   });
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const [categories, setCategories] = useState([]);
   const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tags`)
+      .then((r) => r.json())
+      .then(setTags);
+  }, []);
 
   useEffect(() => {
     const t = localStorage.getItem("token");
@@ -36,7 +45,10 @@ export default function NewBlogPage() {
       return;
     }
 
-    await createBlog(token, form);
+    await createBlog(token, {
+      ...form,
+      tags: selectedTags,
+    });
     alert("Yazı eklendi");
   };
 
@@ -74,6 +86,25 @@ export default function NewBlogPage() {
             </option>
           ))}
         </select>
+
+        <TagSelector
+          allTags={tags}
+          value={selectedTags}
+          onChange={setSelectedTags}
+          onCreate={async (name) => {
+            const res = await fetch(`${API}/api/tags`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ name }),
+            });
+            const tag = await res.json();
+            setTags((prev) => [...prev, tag]);
+            return tag;
+          }}
+        />
 
         <Editor
           value={form.content}

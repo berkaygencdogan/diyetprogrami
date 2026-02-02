@@ -5,7 +5,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-/* Tailwind preflight override */
+
+:root {
+  --blog-font-scale: 1;
+}
+
+.prose {
+  font-size: calc(1rem * var(--blog-font-scale));
+}
+
 img {
   max-width: none;
 }

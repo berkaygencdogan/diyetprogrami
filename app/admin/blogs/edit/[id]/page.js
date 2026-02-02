@@ -22,10 +22,43 @@ export default function EditBlogPage({ params }) {
     content: "",
     category_id: "",
   });
+  const [allTags, setAllTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [newTag, setNewTag] = useState("");
+
+  const toggleTag = (tagId) => {
+    setSelectedTags((prev) =>
+      prev.includes(tagId)
+        ? prev.filter((id) => id !== tagId)
+        : [...prev, tagId],
+    );
+  };
+
+  const addNewTag = async () => {
+    if (!newTag.trim()) return;
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tags`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name: newTag }),
+    });
+
+    const tag = await res.json();
+    setAllTags((prev) => [...prev, tag]);
+    setSelectedTags((prev) => [...prev, tag.id]);
+    setNewTag("");
+  };
 
   useEffect(() => {
     const t = localStorage.getItem("token");
     setToken(t);
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tags`)
+      .then((r) => r.json())
+      .then(setAllTags);
 
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`)
       .then((r) => r.json())
@@ -35,40 +68,20 @@ export default function EditBlogPage({ params }) {
 
   useEffect(() => {
     if (!token || !id) return;
-
-    fetchBlogById(token, id).then((data) => {
+    const updateBlogData = async () => {
+      const data = await fetchBlogById(token, id);
+      console.log("Blog data:", data);
       if (!data) return;
-
-      console.log("📥 Blog data:", data);
-
       setForm({
         title: data.title,
         cover_image: data.cover_image || "",
         content: data.content || "",
         category_id: data.category_id || "",
       });
-
-      // Görsel URL'sini oluştur
-      if (data.cover_image) {
-        let imageUrl = data.cover_image;
-
-        // Relative path ise API URL ekle
-        if (!imageUrl.startsWith("http")) {
-          imageUrl = `${process.env.NEXT_PUBLIC_API_URL}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
-        }
-
-        console.log("🖼️ Image URL:", imageUrl);
-
-        // Cache busting ekle
-        const timestamp = Date.now();
-        const cachedUrl = `${imageUrl}${imageUrl.includes("?") ? "&" : "?"}_=${timestamp}`;
-
-        setImagePreview(cachedUrl);
-        setImageError(false); // ✅ Hata state'ini sıfırla
-      }
-
+      setSelectedTags(data.tags?.map((t) => t.id) || []);
       setLoading(false);
-    });
+    };
+    updateBlogData();
   }, [token, id]);
 
   const handleImageUpload = async (e) => {
@@ -139,7 +152,9 @@ export default function EditBlogPage({ params }) {
       if (testResponse.ok) {
         alert("✅ Görsel başarıyla yüklendi ve erişilebilir!");
       } else {
-        console.warn(`⚠️ Görsel yüklendi ama erişilemiyor (${testResponse.status})`);
+        console.warn(
+          `⚠️ Görsel yüklendi ama erişilemiyor (${testResponse.status})`,
+        );
         setImageError(true); // ✅ Hata olduğunu işaretle
       }
     } catch (error) {
@@ -181,9 +196,12 @@ export default function EditBlogPage({ params }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      await updateBlog(token, id, form);
+      await updateBlog(token, id, {
+        ...form,
+        tags: selectedTags,
+      });
       alert("✅ Yazı güncellendi!");
     } catch (error) {
       console.error("❌ Güncelleme hatası:", error);
@@ -260,16 +278,15 @@ export default function EditBlogPage({ params }) {
                   onClick={() => {
                     // Tekrar dene
                     const timestamp = Date.now();
-                    setImagePreview(`${imagePreview.split('?')[0]}?_=${timestamp}`);
+                    setImagePreview(
+                      `${imagePreview.split("?")[0]}?_=${timestamp}`,
+                    );
                     setImageError(false);
                   }}
                 >
                   🔄 Tekrar Dene
                 </button>
-                <button
-                  type="button"
-                  onClick={removeImage}
-                >
+                <button type="button" onClick={removeImage}>
                   🗑️ Kaldır
                 </button>
               </div>
@@ -315,6 +332,44 @@ export default function EditBlogPage({ params }) {
               </option>
             ))}
           </select>
+        </div>
+
+        <div className="form-group">
+          <label>Etiketler</label>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {allTags.map((tag) => (
+              <button
+                key={tag.id}
+                type="button"
+                onClick={() => toggleTag(tag.id)}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 20,
+                  border: "1px solid #d1d5db",
+                  background: selectedTags.includes(tag.id)
+                    ? "#10b981"
+                    : "white",
+                  color: selectedTags.includes(tag.id) ? "white" : "#374151",
+                  cursor: "pointer",
+                  fontSize: 13,
+                }}
+              >
+                #{tag.name}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+            <input
+              placeholder="Yeni etiket"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+            />
+            <button type="button" onClick={addNewTag}>
+              Ekle
+            </button>
+          </div>
         </div>
 
         <div className="form-group">

@@ -7,8 +7,6 @@ import Image from "next/image";
 export default function PopularBlogs() {
   const [posts, setPosts] = useState([]);
 
-  console.log("post", posts);
-
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/popular`)
       .then((r) => r.json())

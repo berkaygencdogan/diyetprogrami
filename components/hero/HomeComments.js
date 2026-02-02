@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import ExpandableText from "../blog/ExpandableText";
 
 export default function HomeComments() {
   const [comments, setComments] = useState([]);
@@ -14,28 +16,59 @@ export default function HomeComments() {
   if (!comments.length) return null;
 
   return (
-    <section className="mx-auto mt-20 max-w-7xl px-4">
-      {/* DIŞ KUTU */}
-      <div className="rounded-[32px] bg-emerald-50/60 px-6 py-10 md:px-12">
-        <h2 className="mb-10 text-center text-2xl font-bold text-gray-900">
-          💬 Kullanıcı Yorumları
+    <section className="mx-auto mt-24 max-w-7xl px-4">
+      <div className="rounded-[36px] bg-gradient-to-br from-emerald-50 via-white to-emerald-50 px-6 py-14 md:px-12">
+        <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">
+          💬 Kullanıcı Deneyimleri
         </h2>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {comments.map((c) => (
-            <div
-              key={c.id}
-              className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-lg transition"
-            >
-              <p className="text-sm text-gray-700 leading-relaxed">
-                “{c.content}”
-              </p>
+        <div className="grid gap-8 md:grid-cols-3">
+          {comments.map((c) => {
+            const tagList = c.tags ? c.tags.split(",") : [];
 
-              <div className="mt-4 text-xs font-semibold text-emerald-600">
-                {c.email}
+            return (
+              <div
+                key={c.comment_id}
+                className="group relative rounded-3xl bg-white p-7 shadow-sm transition-all
+                  hover:-translate-y-1 hover:shadow-xl"
+              >
+                {/* BLOG META */}
+                <Link
+                  href={`/blog/${c.slug}`}
+                  className="mb-4 block text-sm font-semibold text-emerald-600 hover:underline"
+                >
+                  📄 {c.title}
+                </Link>
+                {/* YORUM */}
+                <ExpandableText text={c.comment_content} limit={140} />
+                {/* ETİKETLER */}
+                {tagList.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {tagList.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="rounded-full bg-emerald-50 px-3 py-1 text-xs
+                          font-medium text-emerald-700"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {/* FOOTER */}
+                <div className="mt-6 flex items-center justify-between text-xs text-gray-500">
+                  <span className="font-semibold text-emerald-600">
+                    {c.comment_name}
+                  </span>
+
+                  <div className="flex items-center gap-3">
+                    <span>👁️ {c.views}</span>
+                    <span>💬 {c.comment_count}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

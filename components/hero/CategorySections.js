@@ -29,7 +29,6 @@ export default function CategorySections() {
   return (
     <div className="mx-auto mt-20 max-w-7xl px-4 space-y-24">
       {categories.map((cat) => {
-        console.log("object", cat);
         // 🔹 ÖZEL TASARIMLAR
         if (cat.slug === "diyet") {
           return <DietAutoSlider key={cat.id} posts={cat.posts} />;

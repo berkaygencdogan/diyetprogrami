@@ -18,6 +18,15 @@ export default function ProgramDetailPage({ params }) {
       .then(setProgram);
   }, [id]);
 
+  const calculateMealTotal = (items) =>
+    items.reduce((sum, item) => sum + (item.calories || 0), 0);
+
+  const calculateDayTotal = (meals) =>
+    Object.values(meals).reduce(
+      (sum, items) => sum + calculateMealTotal(items),
+      0,
+    );
+
   const deleteProgram = async () => {
     const token = localStorage.getItem("token");
 
@@ -32,6 +41,11 @@ export default function ProgramDetailPage({ params }) {
   if (!program) return null;
 
   const { summary, plan } = program.data;
+
+  const todayMeals = plan[0].meals;
+  const dayTotalCalories = calculateDayTotal(todayMeals);
+  const targetCalories = summary.dailyCalories;
+  const diff = targetCalories - dayTotalCalories;
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 space-y-10">
@@ -51,27 +65,64 @@ export default function ProgramDetailPage({ params }) {
 
       {/* 🍽️ BUGÜNÜN MENÜSÜ */}
       <section className="rounded-2xl bg-white p-6 shadow-lg">
+        <h2 className="mb-4 text-xl font-bold">🔥 Bugün Toplam</h2>
+
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <p className="text-3xl font-bold text-gray-900">
+              {dayTotalCalories} kcal
+            </p>
+            <p className="text-sm text-gray-500">
+              Hedef: {targetCalories} kcal
+            </p>
+          </div>
+
+          <div
+            className={`rounded-xl px-4 py-2 text-sm font-semibold
+        ${
+          diff >= 0
+            ? "bg-emerald-50 text-emerald-700"
+            : "bg-red-50 text-red-600"
+        }`}
+          >
+            {diff >= 0
+              ? `Hedefe ${diff} kcal kaldı`
+              : `${Math.abs(diff)} kcal aşıldı`}
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-2xl bg-white p-6 shadow-lg">
         <h2 className="mb-4 text-xl font-bold">🍽️ Bugünün Menüsü</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {Object.entries(plan[0].meals).map(([meal, items]) => (
-            <div key={meal} className="rounded-xl border p-4">
-              <h4 className="mb-2 font-semibold">
-                {meal === "breakfast" && "Kahvaltı"}
-                {meal === "lunch" && "Öğle Yemeği"}
-                {meal === "dinner" && "Akşam Yemeği"}
-                {meal === "snack" && "Ara Öğün"}
-              </h4>
+          {Object.entries(plan[0].meals).map(([meal, items]) => {
+            const mealTotal = calculateMealTotal(items);
 
-              <ul className="space-y-1 text-sm">
-                {items.map((i, idx) => (
-                  <li key={idx}>
-                    • {i.name} – {i.grams} g ({i.calories} kcal)
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+            return (
+              <div key={meal} className="rounded-xl border p-4">
+                <h4 className="mb-2 font-semibold">
+                  {meal === "breakfast" && "Kahvaltı"}
+                  {meal === "lunch" && "Öğle Yemeği"}
+                  {meal === "dinner" && "Akşam Yemeği"}
+                  {meal === "snack" && "Ara Öğün"}
+                </h4>
+
+                <ul className="space-y-1 text-sm">
+                  {items.map((i, idx) => (
+                    <li key={idx}>
+                      • {i.name} – {i.grams} g ({i.calories} kcal)
+                    </li>
+                  ))}
+                </ul>
+
+                {/* 🔥 ÖĞÜN TOPLAMI */}
+                <div className="mt-3 text-sm font-semibold text-emerald-700">
+                  Toplam: {mealTotal} kcal
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 

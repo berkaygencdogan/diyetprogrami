@@ -1,15 +1,27 @@
 import {
   fetchBlogBySlug,
+  fetchCategories,
   fetchComments,
   getRelatedBlogsByTags,
 } from "@/lib/api";
+
+import BlogComments from "@/components/blog/BlogComments";
 import BlogContentLayout from "@/components/blog/BlogContentLayout";
 import CommentForm from "@/components/blog/CommentForm";
-import BlogComments from "@/components/blog/BlogComments";
-import TableOfContents from "@/components/blog/TableOfContents";
-import { generateTOC } from "@/lib/toc";
-import { addHeadingIds } from "@/lib/addHeadingIds";
 import FavoriteButton from "@/components/blog/FavoriteButton";
+import TableOfContents from "@/components/blog/TableOfContents";
+
+// 🆕 EKLENENLER
+import BlogSidebar from "@/components/blog/BlogSidebar";
+import FontSizeControl from "@/components/blog/FontSizeControl";
+import MobileCategoryDrawer from "@/components/blog/MobileCategoryDrawer";
+
+import HorizontalAd from "@/components/ads/HorizontalAd";
+import { VerticalAd } from "@/components/ads/VerticalAd";
+import EmojiReactions from "@/components/blog/EmojiReactions";
+import PopularBlogs from "@/components/blog/PopularBlog";
+import { addHeadingIds } from "@/lib/addHeadingIds";
+import { generateTOC } from "@/lib/toc";
 
 function autoLink(content, relatedBlogs) {
   let html = content;
@@ -31,48 +43,66 @@ function autoLink(content, relatedBlogs) {
 export default async function BlogDetailPage({ params }) {
   const { slug } = await params;
 
-  // 1️⃣ BLOG
   const blog = await fetchBlogBySlug(slug);
   if (!blog) return <div>Yazı bulunamadı</div>;
 
-  // 2️⃣ YORUMLAR
   const comments = await fetchComments(blog.id);
-
-  // 3️⃣ İLGİLİ YAZILAR (ETİKETTEN)
   const related = await getRelatedBlogsByTags(blog.id);
+  const categories = await fetchCategories();
 
-  // 4️⃣ AUTO LINK
   const linkedContent = autoLink(blog.content, related);
-
-  // 5️⃣ TOC
   const toc = generateTOC(linkedContent);
-
-  // 6️⃣ HEADING ID EKLE
   const contentWithIds = addHeadingIds(linkedContent);
 
   return (
-    <BlogContentLayout
-      title={blog.title}
-      author={blog.author_name}
-      cover={blog.cover_image}
-      content={linkedContent}
-      tags={blog.tags}
-      views={blog.views}
-      blog={blog}
-    >
-      <FavoriteButton blogId={blog.id} initial={blog.is_favorite} />
-      {/* 📑 TOC */}
-      <TableOfContents items={toc} />
+    <>
+      {/* 📱 MOBILE CATEGORY DRAWER */}
+      <MobileCategoryDrawer categories={categories} />
 
-      {/* 📄 BLOG CONTENT */}
-      <div
-        className="prose prose-lg mt-8 max-w-none"
-        dangerouslySetInnerHTML={{ __html: contentWithIds }}
-      />
+      {/* 🧱 MAIN LAYOUT */}
+      <div className="mx-auto w-full px-4">
+        <div className="flex gap-10">
+          {/* 🖥️ LEFT AD – SADECE DESKTOP */}
+          <div className="hidden xl:block">
+            <VerticalAd position="left" />
+          </div>
 
-      {/* 💬 YORUMLAR */}
-      <BlogComments comments={comments} />
-      <CommentForm blogId={blog.id} />
-    </BlogContentLayout>
+          {/* 📝 CONTENT */}
+          <div className="flex-1 min-w-0">
+            <BlogContentLayout
+              title={blog.title}
+              author={blog.author_name}
+              cover={blog.cover_image}
+              content={linkedContent}
+              tags={blog.tags}
+              views={blog.views}
+              blog={blog}
+            >
+              <div className="flex flex-wrap items-center gap-4">
+                <FavoriteButton blogId={blog.id} initial={blog.is_favorite} />
+                <FontSizeControl />
+              </div>
+
+              <TableOfContents items={toc} />
+
+              <div
+                className="prose prose-lg mt-8 max-w-none"
+                dangerouslySetInnerHTML={{ __html: contentWithIds }}
+              />
+              <EmojiReactions blogId={blog.id} blogTitle={blog.title} />
+              <BlogComments comments={comments} />
+              <CommentForm blogId={blog.id} />
+            </BlogContentLayout>
+          </div>
+
+          {/* 🖥️ SIDEBAR – SADECE DESKTOP */}
+          <div className="hidden xl:block">
+            <BlogSidebar categories={categories} blogs={related} />
+          </div>
+        </div>
+        <HorizontalAd />
+        <PopularBlogs />
+      </div>
+    </>
   );
 }
