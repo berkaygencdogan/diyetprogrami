@@ -22,9 +22,7 @@ export default function AdminLoginPage() {
           body: JSON.stringify({ email, password }),
         },
       );
-      console.log("asdsa", res);
       const data = await res.json();
-      console.log("LOGIN RESPONSE:", data);
       if (!res.ok) {
         setError(data.error || "Giriş başarısız");
         setLoading(false);

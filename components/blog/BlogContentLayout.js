@@ -18,7 +18,7 @@ export default function BlogContentLayout({
   const readingTime = calculateReadingTime(content);
 
   return (
-    <main className="relative min-h-screen bg-[url('/images/blog-bg.png')] bg-cover bg-center bg-no-repeat">
+    <main className="relative min-h-screen bg-cover bg-center bg-no-repeat">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -45,7 +45,7 @@ export default function BlogContentLayout({
 
       <div className="relative h-[150px] overflow-hidden" />
 
-      <article className="relative mx-auto -mt-24 max-w-[760px] rounded-3xl bg-white/90 px-6 py-10 shadow-2xl backdrop-blur">
+      <article className="relative mx-auto -mt-24 w-full rounded-3xl bg-white/90 px-6 py-10 shadow-2xl backdrop-blur">
         <h1 className="text-3xl font-extrabold text-gray-900">{title}</h1>
 
         <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">

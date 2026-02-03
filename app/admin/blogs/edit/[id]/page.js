@@ -70,7 +70,6 @@ export default function EditBlogPage({ params }) {
     if (!token || !id) return;
     const updateBlogData = async () => {
       const data = await fetchBlogById(token, id);
-      console.log("Blog data:", data);
       if (!data) return;
       setForm({
         title: data.title,
@@ -104,11 +103,6 @@ export default function EditBlogPage({ params }) {
       const formData = new FormData();
       formData.append("file", file);
 
-      console.log(
-        "📤 Uploading to:",
-        `${process.env.NEXT_PUBLIC_API_URL}/api/upload/image`,
-      );
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/upload/image`,
         {
@@ -127,13 +121,10 @@ export default function EditBlogPage({ params }) {
       }
 
       const data = await response.json();
-      console.log("✅ Upload response:", data);
 
       // Sunucudan gelen path
       const imagePath = data.location; // /uploads/blog/filename.jpg
       const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${imagePath}`;
-
-      console.log("🎯 Full image URL:", fullUrl);
 
       // Form'u güncelle
       setForm({ ...form, cover_image: imagePath });
@@ -147,7 +138,6 @@ export default function EditBlogPage({ params }) {
 
       // Hemen test et
       const testResponse = await fetch(fullUrl, { method: "HEAD" });
-      console.log("🔍 File test result:", testResponse.status, testResponse.ok);
 
       if (testResponse.ok) {
         alert("✅ Görsel başarıyla yüklendi ve erişilebilir!");
@@ -252,7 +242,6 @@ export default function EditBlogPage({ params }) {
                   // setImagePreview(null) YAPMA! Bu sonsuz döngü yaratır
                 }}
                 onLoad={() => {
-                  console.log("✅ Görsel başarıyla yüklendi:", imagePreview);
                   setImageError(false);
                 }}
               />

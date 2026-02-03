@@ -6,10 +6,11 @@ import { fetchBlogsByCategory } from "@/lib/blogApi";
 import Link from "next/link";
 import Image from "next/image";
 import HorizontalAd from "../ads/HorizontalAd";
+import CategoryBadge from "../blog/CategoryBadge";
+import CategorySliderSection from "./CategorySliderSection";
 
 export default function CategoryPage() {
   const [categories, setCategories] = useState([]);
-
   useEffect(() => {
     async function load() {
       const cats = await fetchCategories();
@@ -38,7 +39,7 @@ export default function CategoryPage() {
           return (
             <React.Fragment key={cat.id}>
               <DietSection category={cat} />
-              <HorizontalAd />
+              {/* <HorizontalAd /> */}
             </React.Fragment>
           );
         }
@@ -46,16 +47,18 @@ export default function CategoryPage() {
         if (layoutType === 1) {
           return (
             <React.Fragment key={cat.id}>
-              <CategorySection category={cat} />
-              <HorizontalAd />
+              <CategorySliderSection category={cat} />
+
+              {/* <HorizontalAd /> */}
             </React.Fragment>
           );
         }
 
         return (
           <React.Fragment key={cat.id}>
-            <HealthyLifeSection category={cat} />
-            <HorizontalAd />
+            <CategorySliderSection category={cat} />
+
+            {/* <HorizontalAd /> */}
           </React.Fragment>
         );
       })}
@@ -84,10 +87,15 @@ function DietSection({ category }) {
 
   const post = posts[index];
 
+  const prev = () => setIndex((i) => (i - 1 + posts.length) % posts.length);
+
+  const next = () => setIndex((i) => (i + 1) % posts.length);
+
   return (
     <section className="mb-20">
+      {/* HEADER */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="mb-4 text-lg font-bold">🔥 Diyet</h2>
+        <h2 className="text-lg font-bold">🔥 Diyet</h2>
         <Link
           href={`/kategori/${category.slug}`}
           className="text-sm font-semibold text-emerald-600 hover:underline"
@@ -96,6 +104,7 @@ function DietSection({ category }) {
         </Link>
       </div>
 
+      {/* SLIDER */}
       <Link
         href={`/blog/${post.slug}`}
         className="group relative block h-[320px] overflow-hidden rounded-3xl shadow-lg"
@@ -104,28 +113,59 @@ function DietSection({ category }) {
           src={post.cover_image}
           alt={post.title}
           fill
-          className="object-cover"
           unoptimized
+          className="object-cover"
         />
 
         <div className="absolute inset-0 bg-black/50" />
 
+        {/* SOL OK */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            prev();
+          }}
+          className="absolute left-4 top-1/2 z-10
+                     h-10 w-10 -translate-y-1/2
+                     rounded-full bg-black/50 text-white
+                     hover:bg-black/70 transition"
+        >
+          ‹
+        </button>
+
+        {/* SAĞ OK */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            next();
+          }}
+          className="absolute right-4 top-1/2 z-10
+                     h-10 w-10 -translate-y-1/2
+                     rounded-full bg-black/50 text-white
+                     hover:bg-black/70 transition"
+        >
+          ›
+        </button>
+
+        {/* TEXT */}
         <div className="absolute bottom-6 left-6 right-6 text-white">
-          <span className="mb-2 inline-block rounded bg-emerald-600 px-3 py-1 text-xs font-semibold">
-            Diyet
-          </span>
-          <h3 className="text-2xl font-extrabold leading-tight">
+          <CategoryBadge
+            name={post.category_name}
+            color={post.category_color}
+          />
+          <h3 className="mt-2 text-2xl font-extrabold leading-tight">
             {post.title}
           </h3>
         </div>
       </Link>
 
       {/* DOTS */}
-      <div className="mt-3 flex gap-2 justify-center">
+      <div className="mt-4 flex justify-center gap-2">
         {posts.map((_, i) => (
-          <span
+          <button
             key={i}
-            className={`h-2 w-2 rounded-full ${
+            onClick={() => setIndex(i)}
+            className={`h-2 w-2 rounded-full transition ${
               i === index ? "bg-emerald-600" : "bg-gray-300"
             }`}
           />
@@ -172,8 +212,8 @@ function CategorySection({ category }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
           <div className="absolute bottom-4 left-4 right-4 text-white">
-            <span className="inline-block rounded bg-emerald-600 px-2 py-0.5 text-xs font-semibold">
-              {category.name}
+            <span className="inline-block rounded px-2 py-0.5 text-xs font-semibold">
+              <CategoryBadge name={category.name} color={category.color} />
             </span>
             <h3 className="mt-1 text-lg font-bold">{main.title}</h3>
           </div>
@@ -244,7 +284,12 @@ function HealthyLifeSection({ category }) {
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
+            <div className="absolute bottom-4 left-4 right-4 text-white">
+              <span className="inline-block rounded px-2 py-0.5 text-xs font-semibold">
+                <CategoryBadge name={category.name} color={category.color} />
+              </span>
+              <h3 className="mt-1 text-lg font-bold">{post.title}</h3>
+            </div>
             <div className="absolute bottom-4 left-4 right-4 text-white">
               <h3 className="text-lg font-bold line-clamp-2">{post.title}</h3>
             </div>

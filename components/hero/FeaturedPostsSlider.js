@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchLatestBlogs } from "@/lib/blogApi";
+import CategoryBadge from "../blog/CategoryBadge";
 
 export default function FeaturedPostsSlider() {
   const [posts, setPosts] = useState([]);
-
   useEffect(() => {
     fetchLatestBlogs().then(setPosts).catch(console.error);
   }, []);
@@ -48,8 +48,11 @@ export default function FeaturedPostsSlider() {
                 className="object-cover transition group-hover:scale-105"
               />
 
-              <span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-semibold text-white">
-                {post.parent_name || post.category_name}
+              <span className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs font-semibold">
+                <CategoryBadge
+                  name={post.category_name}
+                  color={post.category_color}
+                />
               </span>
             </div>
 

@@ -7,8 +7,6 @@ export default async function CategoryDetailPage({ params }) {
 
   const posts = await fetchBlogsByCategory(slug);
 
-  console.log("asdsa", posts, slug, params);
-
   if (!posts.length) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-20 text-center text-gray-500">

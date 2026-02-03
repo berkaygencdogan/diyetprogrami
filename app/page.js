@@ -13,26 +13,26 @@ export default function HomePage() {
   return (
     <main>
       <HeroSlider />
-      <HorizontalAd />
+      {/* <HorizontalAd /> */}
       {/* 🔽 SAYFA GÖVDESİ */}
       <div className="relative mt-16">
         {/* SOL REKLAM */}
         <aside className="hidden xl:block absolute left-0 top-0 h-full">
-          <VerticalAd position="left" />
+          {/* <VerticalAd position="left" /> */}
         </aside>
 
         {/* SAĞ REKLAM */}
         <aside className="hidden xl:block absolute right-0 top-0 h-full">
-          <VerticalAd position="right" />
+          {/* <VerticalAd position="right" /> */}
         </aside>
 
         {/* ANA İÇERİK */}
         <div className="mx-auto max-w-7xl px-4">
           <FeaturedPostsSlider />
-          <HorizontalAd />
+          {/* <HorizontalAd /> */}
 
           <PopularBlogs />
-          <HorizontalAd />
+          {/* <HorizontalAd /> */}
 
           <CategoryPage />
         </div>
@@ -44,9 +44,7 @@ export default function HomePage() {
           <HomeComments />
 
           {/* ALT BANNER */}
-          <div className="my-16">
-            <HorizontalAd />
-          </div>
+          <div className="my-16">{/* <HorizontalAd /> */}</div>
         </div>
       </div>
     </main>

@@ -1,85 +1,132 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default function HeroSlider() {
   const [slides, setSlides] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`)
       .then((r) => r.json())
-      .then(setSlides);
+      .then((data) => {
+        setSlides(data || []);
+        setActiveIndex(0);
+      });
   }, []);
-
-  // ⏱️ 5 saniye sonra kay
-  useEffect(() => {
-    if (!slides.length) return;
-
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % slides.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [slides]);
 
   if (!slides.length) return null;
 
+  const prevSlide = () => {
+    setActiveIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  };
+
+  const active = slides[activeIndex];
+
   return (
-    <section className="relative mx-auto mt-10 max-w-7xl overflow-hidden rounded-3xl">
-      {/* SLIDES */}
-      <div
-        className="flex transition-transform duration-700 ease-in-out"
-        style={{ transform: `translateX(-${index * 100}%)` }}
-      >
-        {slides.map((s) => (
-          <Link
-            key={s.id}
-            href={s.link || "#"}
-            className="relative h-[220px] w-full shrink-0 sm:h-[260px] md:h-[300px]"
-          >
-            {/* IMAGE */}
-            <Image
-              src={s.image}
-              alt={s.title || "Slider görseli"}
-              fill
-              unoptimized
-              className="object-cover"
-              priority
-            />
-
-            {/* 🔥 OVERLAY + TEXT → SADECE BAŞLIK VARSA */}
-            {s.title && (
-              <>
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-
-                <div className="absolute inset-0 flex items-center">
-                  <div className="px-6 text-white">
-                    <h2 className="max-w-lg text-lg font-bold leading-snug sm:text-xl md:text-2xl">
-                      {s.title}
-                    </h2>
-                  </div>
-                </div>
-              </>
-            )}
-          </Link>
-        ))}
-      </div>
-
-      {/* DOTS */}
-      <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`h-2 w-2 rounded-full transition ${
-              i === index ? "bg-white" : "bg-white/40"
-            }`}
+    <div className="mx-auto max-w-7xl px-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+        {/* ================= MAIN SLIDER ================= */}
+        <Link
+          href={active.link || "#"}
+          className="relative col-span-3 overflow-hidden rounded-xl"
+        >
+          <Image
+            src={active.image}
+            alt={active.title || "Slider"}
+            width={900}
+            height={500}
+            className="h-[420px] w-full object-cover"
+            priority
+            unoptimized
           />
-        ))}
+
+          {/* overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+          {active.title && (
+            <h2 className="absolute bottom-14 left-6 right-6 text-3xl font-bold leading-tight text-white">
+              {active.title}
+            </h2>
+          )}
+
+          {/* NUMBERS */}
+          <div className="absolute bottom-2 left-6 flex gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveIndex(i);
+                }}
+                className={`flex h-8 w-8 items-center justify-center border text-sm font-bold transition
+                  ${
+                    i === activeIndex
+                      ? "bg-white text-black border-white"
+                      : "bg-black/60 text-white border-white/40 hover:bg-white hover:text-black"
+                  }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+
+          {/* ARROWS */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              prevSlide();
+            }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 px-3 py-2"
+          >
+            ‹
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              nextSlide();
+            }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 px-3 py-2"
+          >
+            ›
+          </button>
+        </Link>
+
+        {/* ================= RIGHT COLUMN ================= */}
+        <div className="flex flex-col gap-4">
+          {slides.slice(1, 4).map((item, i) => (
+            <div
+              key={item.id}
+              onClick={() => setActiveIndex(i + 1)}
+              className="group relative cursor-pointer overflow-hidden rounded-lg"
+            >
+              <Image
+                src={item.image}
+                alt={item.title || "Slider"}
+                width={300}
+                height={120}
+                className="h-[120px] w-full object-cover transition group-hover:scale-105"
+                unoptimized
+              />
+
+              <div className="absolute inset-0 bg-black/50" />
+
+              {item.title && (
+                <p className="absolute bottom-3 left-3 right-3 text-sm font-semibold text-white">
+                  {item.title}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

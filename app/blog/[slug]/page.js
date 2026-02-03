@@ -63,9 +63,7 @@ export default async function BlogDetailPage({ params }) {
       <div className="mx-auto w-full px-4">
         <div className="flex gap-10">
           {/* 🖥️ LEFT AD – SADECE DESKTOP */}
-          <div className="hidden xl:block">
-            <VerticalAd position="left" />
-          </div>
+          <div className="hidden xl:block w-40"></div>
 
           {/* 📝 CONTENT */}
           <div className="flex-1 min-w-0">
@@ -100,7 +98,6 @@ export default async function BlogDetailPage({ params }) {
             <BlogSidebar categories={categories} blogs={related} />
           </div>
         </div>
-        <HorizontalAd />
         <PopularBlogs />
       </div>
     </>

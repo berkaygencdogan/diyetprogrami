@@ -8,7 +8,6 @@ import { fetchCategories, fetchBlogsByCategory } from "@/lib/blogApi";
 
 export default function CategorySections() {
   const [categories, setCategories] = useState([]);
-  console.log(categories);
   useEffect(() => {
     async function load() {
       const cats = await fetchCategories();
