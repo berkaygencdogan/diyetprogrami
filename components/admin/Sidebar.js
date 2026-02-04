@@ -11,6 +11,8 @@ const menu = [
   { name: "Kategoriler", href: "/admin/categories" },
   { name: "Yorumlar", href: "/admin/comments" },
   { name: "Kullanıcılar", href: "/admin/users" },
+  { name: "Ayarlar", href: "/admin/ayarlar" },
+  { name: "SEO", href: "/admin/seo" },
 ];
 
 export default function Sidebar() {

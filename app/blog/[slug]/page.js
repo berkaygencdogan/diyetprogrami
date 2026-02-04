@@ -16,12 +16,34 @@ import BlogSidebar from "@/components/blog/BlogSidebar";
 import FontSizeControl from "@/components/blog/FontSizeControl";
 import MobileCategoryDrawer from "@/components/blog/MobileCategoryDrawer";
 
-import HorizontalAd from "@/components/ads/HorizontalAd";
-import { VerticalAd } from "@/components/ads/VerticalAd";
 import EmojiReactions from "@/components/blog/EmojiReactions";
 import PopularBlogs from "@/components/blog/PopularBlog";
 import { addHeadingIds } from "@/lib/addHeadingIds";
 import { generateTOC } from "@/lib/toc";
+import { fetchRenderedSeo } from "@/lib/seo";
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+
+  const seo = await fetchRenderedSeo({
+    page_key: "blog_detail",
+    slug,
+  });
+
+  if (!seo?.title) {
+    return {
+      title: "Blog | DiyetProgrami.com",
+      robots: "noindex",
+    };
+  }
+
+  return {
+    title: seo.title,
+    description: seo.description,
+    canonical: seo.canonical,
+    robots: seo.robots,
+  };
+}
 
 function autoLink(content, relatedBlogs) {
   let html = content;

@@ -9,6 +9,8 @@ export default function Header() {
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const [programSetting, setProgramSetting] = useState(null);
+  const [favoriSetting, setFavoriSetting] = useState(null);
 
   useEffect(() => {
     const syncUser = () => {
@@ -23,6 +25,15 @@ export default function Header() {
     return () => {
       window.removeEventListener("auth-change", syncUser);
     };
+  }, []);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/settings/public`)
+      .then((r) => r.json())
+      .then((data) => {
+        setProgramSetting(data.program_access ?? "public");
+        setFavoriSetting(data.favori_access ?? "public");
+      });
   }, []);
 
   const logout = () => {
@@ -51,21 +62,11 @@ export default function Header() {
           <NavLink href="/">Anasayfa</NavLink>
           <NavLink href="/blog">Blog</NavLink>
 
-          {user ? (
+          {/* 1️⃣ USER VAR */}
+          {user && (
             <>
-              <NavLink
-                href="/favorilerim"
-                className="text-sm font-medium text-gray-700 hover:text-emerald-600"
-              >
-                ❤️ Favorilerim
-              </NavLink>
-
-              <NavLink
-                href="/programim"
-                className="text-sm font-medium text-gray-700 hover:text-emerald-600"
-              >
-                📊 Programım
-              </NavLink>
+              <NavLink href="/programim">📊 Programım</NavLink>
+              <NavLink href="/favorilerim">❤️ Favorilerim</NavLink>
 
               {user.role === "admin" && <NavLink href="/admin">Admin</NavLink>}
 
@@ -76,7 +77,39 @@ export default function Header() {
                 Çıkış
               </button>
             </>
-          ) : (
+          )}
+
+          {/* 2️⃣ USER YOK + PUBLIC */}
+          {!user &&
+            programSetting === "public" &&
+            favoriSetting === "public" && (
+              <>
+                <NavLink href="/programim">📊 Programım</NavLink>
+                <NavLink href="/favorilerim">❤️ Favorilerim</NavLink>
+
+                <NavLink href="/login">Giriş Yap</NavLink>
+                <NavLink href="/register">Kayıt Ol</NavLink>
+              </>
+            )}
+
+          {!user && programSetting === "auth" && favoriSetting === "public" && (
+            <>
+              <NavLink href="/favorilerim">❤️ Favorilerim</NavLink>
+
+              <NavLink href="/login">Giriş Yap</NavLink>
+              <NavLink href="/register">Kayıt Ol</NavLink>
+            </>
+          )}
+
+          {!user && programSetting === "public" && favoriSetting === "auth" && (
+            <>
+              <NavLink href="/programim">📊 Programım</NavLink>
+              <NavLink href="/login">Giriş Yap</NavLink>
+              <NavLink href="/register">Kayıt Ol</NavLink>
+            </>
+          )}
+          {/* 3️⃣ USER YOK + AUTH */}
+          {!user && programSetting === "auth" && favoriSetting === "auth" && (
             <>
               <NavLink href="/login">Giriş Yap</NavLink>
               <NavLink href="/register">Kayıt Ol</NavLink>

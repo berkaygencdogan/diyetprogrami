@@ -1,6 +1,25 @@
 import { fetchBlogsByCategory } from "@/lib/blogApi";
 import Image from "next/image";
 import Link from "next/link";
+import { fetchRenderedSeo } from "@/lib/seo";
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  console.log(slug);
+  const seo = await fetchRenderedSeo({
+    page_key: "category_detail",
+    slug,
+  });
+  console.log(seo);
+  if (!seo?.title) {
+    return {
+      title: `${slug} | DiyetProgrami.com`,
+      robots: "noindex",
+    };
+  }
+
+  return seo;
+}
 
 export default async function CategoryDetailPage({ params }) {
   const { slug } = await params;

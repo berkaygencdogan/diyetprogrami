@@ -1,12 +1,12 @@
 import "./globals.css";
 import Providers from "@/components/Providers";
-import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="tr" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+    <html lang="tr">
+      <body>
         <Providers>
           <Header />
           {children}

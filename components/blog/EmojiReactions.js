@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchReactions, toggleReaction } from "@/lib/api";
+import { getGuestId } from "@/lib/guest";
 
 const EMOJIS = ["👍", "❤️", "😮", "😂", "😢"];
 
@@ -20,12 +21,24 @@ export default function EmojiReactions({ blogId, blogTitle }) {
   }, [blogId]);
 
   const onClick = async (emoji) => {
-    if (!token) {
-      alert("Tepki vermek için giriş yapmalısın");
-      return;
+    const token = localStorage.getItem("token");
+    const guestId = getGuestId();
+
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/api/reactions/${blogId}`;
+    const headers = { "Content-Type": "application/json" };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    } else {
+      url += `?guest_id=${guestId}`;
     }
 
-    await toggleReaction(blogId, emoji, token);
+    await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ emoji }),
+    });
+
     load();
   };
 

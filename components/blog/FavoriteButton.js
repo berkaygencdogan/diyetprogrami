@@ -1,39 +1,58 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toggleFavorite, checkFavorite } from "@/lib/api";
+import { getGuestId } from "@/lib/guest";
 
 export default function FavoriteButton({ blogId }) {
   const [fav, setFav] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const t = localStorage.getItem("token");
-    if (!t) {
-      setLoading(false);
-      return;
+    const token = localStorage.getItem("token");
+    const guestId = getGuestId();
+
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/api/favorites/check/${blogId}`;
+    const headers = {};
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    } else {
+      url += `?guest_id=${guestId}`;
     }
 
-    setToken(t);
-
-    // 🔍 DB KONTROLÜ
-    checkFavorite(blogId, t)
+    fetch(url, { headers })
+      .then((r) => r.json())
       .then((res) => setFav(res.isFavorite))
       .finally(() => setLoading(false));
   }, [blogId]);
 
-  if (!token || loading) return null;
+  if (loading) return null;
 
   const click = async () => {
-    const next = !fav;
-    setFav(next); // 🔥 optimistic
+    if (saving) return;
+    setSaving(true);
 
-    try {
-      await toggleFavorite(blogId, token);
-    } catch {
-      setFav(!next); // rollback
+    const token = localStorage.getItem("token");
+    const guestId = getGuestId();
+
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/api/favorites/${blogId}`;
+    const headers = {};
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    } else {
+      url += `?guest_id=${guestId}`;
     }
+
+    setFav((prev) => !prev);
+
+    const res = await fetch(url, { method: "POST", headers });
+    if (!res.ok) {
+      setFav((prev) => !prev);
+    }
+
+    setSaving(false);
   };
 
   return (

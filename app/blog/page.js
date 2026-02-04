@@ -2,6 +2,11 @@ import { fetchBlogs } from "@/lib/api";
 import BlogGridCard from "@/components/blog/BlogGridCard";
 import FeaturedPost from "@/components/blog/FeaturedPost";
 import BlogSearch from "@/components/blog/BlogSearch";
+import { fetchRenderedSeo } from "@/lib/seo";
+
+export async function generateMetadata() {
+  return await fetchRenderedSeo({ page_key: "blog" });
+}
 
 export default async function BlogPage({ searchParams }) {
   const { q = "" } = await searchParams;
@@ -52,8 +57,3 @@ export default async function BlogPage({ searchParams }) {
     </main>
   );
 }
-
-export const metadata = {
-  title: "Blog | Diyet & Sağlıklı Yaşam",
-  description: "Sağlıklı beslenme, diyet programları ve yaşam tarzı önerileri.",
-};
