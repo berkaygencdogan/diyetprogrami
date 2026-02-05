@@ -1,48 +1,39 @@
-"use client";
-
+import HeroSlider from "@/components/hero/HeroSlider";
 import PopularBlogs from "@/components/blog/PopularBlog";
 import CategoryPage from "@/components/hero/CategoryPage";
 import FeaturedPostsSlider from "@/components/hero/FeaturedPostsSlider";
-import HeroSlider from "@/components/hero/HeroSlider";
 import HomeComments from "@/components/hero/HomeComments";
-import { getGuestId } from "@/lib/guest";
-import { useEffect } from "react";
+import HorizontalAd from "@/components/ads/HorizontalAd";
+import VerticalAd from "@/components/ads/VerticalAd";
 
-export default function HomePageClient() {
-  useEffect(() => {
-    getGuestId();
-  }, []);
+export default async function HomePage() {
   return (
     <main>
       <HeroSlider />
-      {/* <HorizontalAd /> */}
-      {/* 🔽 SAYFA GÖVDESİ */}
+
       <div className="relative mt-16">
-        {/* SOL REKLAM */}
         <aside className="hidden xl:block absolute left-0 top-0 h-full">
-          {/* <VerticalAd position="left" /> */}
+          <VerticalAd slotId="HOME_LEFT_1" position="left" />
         </aside>
 
-        {/* SAĞ REKLAM */}
         <aside className="hidden xl:block absolute right-0 top-0 h-full">
-          {/* <VerticalAd position="right" /> */}
+          <VerticalAd slotId="HOME_RIGHT_1" position="right" />
         </aside>
 
-        {/* ANA İÇERİK */}
         <div className="mx-auto max-w-7xl px-4">
           <FeaturedPostsSlider />
-          {/* <HorizontalAd /> */}
-
+          <HorizontalAd slotId="HOME_HORIZONTAL_1" />
           <PopularBlogs />
-          {/* <HorizontalAd /> */}
-
+          <HorizontalAd slotId="HOME_HORIZONTAL_2" />
           <CategoryPage />
+          <HorizontalAd slotId="HOME_HORIZONTAL_3" />
         </div>
+
         <div className="mx-auto max-w-7xl px-4">
           <HomeComments />
-
-          {/* ALT BANNER */}
-          <div className="my-16">{/* <HorizontalAd /> */}</div>
+          <div className="my-16">
+            <HorizontalAd slotId="HOME_HORIZONTAL_4" />
+          </div>
         </div>
       </div>
     </main>

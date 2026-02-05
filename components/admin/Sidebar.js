@@ -13,6 +13,7 @@ const menu = [
   { name: "Kullanıcılar", href: "/admin/users" },
   { name: "Ayarlar", href: "/admin/ayarlar" },
   { name: "SEO", href: "/admin/seo" },
+  { name: "Reklamlar", href: "/admin/ads" },
 ];
 
 export default function Sidebar() {

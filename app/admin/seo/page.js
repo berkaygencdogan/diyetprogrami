@@ -17,7 +17,10 @@ export default function SeoAdminPage() {
     fetch(`${API}/api/seo`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((r) => r.json())
+      .then(async (r) => {
+        if (!r.ok) return [];
+        return r.json();
+      })
       .then(setRows);
   }, []);
 
@@ -25,9 +28,9 @@ export default function SeoAdminPage() {
   const edit = (row) => {
     setEditingId(row.id);
     setForm({
-      title_template: row.title_template || "",
-      description_template: row.description_template || "",
-      canonical_template: row.canonical_template || "",
+      title: row.title || "",
+      description: row.description || "",
+      canonical: row.canonical || "",
     });
   };
 
@@ -83,13 +86,13 @@ export default function SeoAdminPage() {
                     {isEditing ? (
                       <input
                         className="w-full rounded border p-2"
-                        value={form.title_template}
+                        value={form.title}
                         onChange={(e) =>
-                          setForm({ ...form, title_template: e.target.value })
+                          setForm({ ...form, title: e.target.value })
                         }
                       />
                     ) : (
-                      row.title_template
+                      row.title
                     )}
                   </td>
 
@@ -98,16 +101,16 @@ export default function SeoAdminPage() {
                     {isEditing ? (
                       <input
                         className="w-full rounded border p-2"
-                        value={form.canonical_template}
+                        value={form.canonical}
                         onChange={(e) =>
                           setForm({
                             ...form,
-                            canonical_template: e.target.value,
+                            canonical: e.target.value,
                           })
                         }
                       />
                     ) : (
-                      row.canonical_template || "-"
+                      row.canonical || "-"
                     )}
                   </td>
 
@@ -117,16 +120,16 @@ export default function SeoAdminPage() {
                       <textarea
                         className="w-full rounded border p-2"
                         rows={2}
-                        value={form.description_template}
+                        value={form.description}
                         onChange={(e) =>
                           setForm({
                             ...form,
-                            description_template: e.target.value,
+                            description: e.target.value,
                           })
                         }
                       />
                     ) : (
-                      row.description_template
+                      row.description
                     )}
                   </td>
 

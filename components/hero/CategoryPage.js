@@ -5,7 +5,6 @@ import { fetchCategories } from "@/lib/api";
 import { fetchBlogsByCategory } from "@/lib/blogApi";
 import Link from "next/link";
 import Image from "next/image";
-import HorizontalAd from "../ads/HorizontalAd";
 import CategoryBadge from "../blog/CategoryBadge";
 import CategorySliderSection from "./CategorySliderSection";
 

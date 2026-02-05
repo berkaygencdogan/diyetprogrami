@@ -2,6 +2,8 @@ import { fetchBlogsByCategory } from "@/lib/blogApi";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchRenderedSeo } from "@/lib/seo";
+import VerticalAd from "@/components/ads/VerticalAd";
+import HorizontalAd from "@/components/ads/HorizontalAd";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -39,7 +41,13 @@ export default async function CategoryDetailPage({ params }) {
       <h1 className="mb-8 text-2xl font-extrabold capitalize">
         📂 {posts[0]?.category_name}
       </h1>
+      <aside className="hidden xl:block absolute left-0 top-0 h-full">
+        <VerticalAd slotId="CATEGORIES_LEFT_1" position="left" />
+      </aside>
 
+      <aside className="hidden xl:block absolute right-0 top-0 h-full">
+        <VerticalAd slotId="CATEGORIES_RIGHT_1" position="right" />
+      </aside>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <Link
@@ -69,6 +77,7 @@ export default async function CategoryDetailPage({ params }) {
           </Link>
         ))}
       </div>
+      <HorizontalAd slotId="CATEGORIES_HORIZONTAL_1" />
     </main>
   );
 }

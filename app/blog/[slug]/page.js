@@ -21,6 +21,8 @@ import PopularBlogs from "@/components/blog/PopularBlog";
 import { addHeadingIds } from "@/lib/addHeadingIds";
 import { generateTOC } from "@/lib/toc";
 import { fetchRenderedSeo } from "@/lib/seo";
+import VerticalAd from "@/components/ads/VerticalAd";
+import HorizontalAd from "@/components/ads/HorizontalAd";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -85,7 +87,11 @@ export default async function BlogDetailPage({ params }) {
       <div className="mx-auto w-full px-4">
         <div className="flex gap-10">
           {/* 🖥️ LEFT AD – SADECE DESKTOP */}
-          <div className="hidden xl:block w-40"></div>
+          <div className="hidden xl:block w-40">
+            <aside className="hidden xl:block w-40 absolute left-0 top-0 h-full">
+              <VerticalAd slotId="BLOGDETAIL_LEFT_1" position="left" />
+            </aside>
+          </div>
 
           {/* 📝 CONTENT */}
           <div className="flex-1 min-w-0">
@@ -121,6 +127,9 @@ export default async function BlogDetailPage({ params }) {
           </div>
         </div>
         <PopularBlogs />
+        <div className="my-16">
+          <HorizontalAd slotId="BLOGDETAIL_HORIZONTAL_1" />
+        </div>
       </div>
     </>
   );

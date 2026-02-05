@@ -3,6 +3,7 @@ import BlogGridCard from "@/components/blog/BlogGridCard";
 import FeaturedPost from "@/components/blog/FeaturedPost";
 import BlogSearch from "@/components/blog/BlogSearch";
 import { fetchRenderedSeo } from "@/lib/seo";
+import VerticalAd from "@/components/ads/VerticalAd";
 
 export async function generateMetadata() {
   return await fetchRenderedSeo({ page_key: "blog" });
@@ -33,7 +34,12 @@ export default async function BlogPage({ searchParams }) {
     >
       {/* OVERLAY */}
       <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px]" />
-
+      <aside className="hidden xl:block absolute left-0 top-0 h-full">
+        <VerticalAd slotId="BLOG_LEFT_1" position="left" />
+      </aside>
+      <aside className="hidden xl:block absolute right-0 top-0 h-full">
+        <VerticalAd slotId="BLOG_RIGHT_1" position="right" />
+      </aside>
       {/* CONTENT */}
       <section className="relative mx-auto max-w-7xl px-4 py-10">
         <h1 className="text-3xl font-bold text-gray-900">Blog</h1>

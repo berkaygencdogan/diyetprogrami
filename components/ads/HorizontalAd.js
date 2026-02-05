@@ -1,11 +1,13 @@
-export default function HorizontalAd() {
+import { getAdSlot } from "@/lib/getAdSlot";
+
+export default async function HorizontalAd({ slotId }) {
+  const ad = await getAdSlot(slotId);
+  if (!ad?.html_code || !ad.published) return null;
+
   return (
-    <div className="mt-16 w-full overflow-hidden rounded-2xl border shadow">
-      <div className="relative h-[120px] md:h-[160px]">
-        <p className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-500 text-lg md:text-xl font-semibold">
-          Buraya Reklam Gelecek
-        </p>
-      </div>
-    </div>
+    <div
+      className={`mt-16 w-full h-[${ad.height}px] overflow-hidden justify-items-center rounded-2xl shadow`}
+      dangerouslySetInnerHTML={{ __html: ad.html_code }}
+    />
   );
 }

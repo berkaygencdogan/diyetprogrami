@@ -1,12 +1,15 @@
-export function VerticalAd({ position }) {
+import { getAdSlot } from "@/lib/getAdSlot";
+
+export default async function VerticalAd({ slotId, position }) {
+  const ad = await getAdSlot(slotId);
+  console.log("gelen  veri", ad);
+  if (!ad?.html_code || !ad.published) return null;
+
   return (
     <div
-      className={`sticky top-28 h-[600px] w-[160px] rounded-xl border overflow-hidden
+      className={`sticky top-28 h-f w-[${ad.width}px] h-[${ad.height}px] rounded-xl overflow-hidden
       ${position === "left" ? "ml-6" : "mr-6"}`}
-    >
-      <p className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-500 text-lg md:text-xl font-semibold">
-        Buraya Reklam Gelecek
-      </p>
-    </div>
+      dangerouslySetInnerHTML={{ __html: ad.html_code }}
+    />
   );
 }

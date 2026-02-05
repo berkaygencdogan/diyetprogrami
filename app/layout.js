@@ -6,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 export default function RootLayout({ children }) {
   return (
     <html lang="tr">
-      <body>
+      <body suppressHydrationWarning>
         <Providers>
           <Header />
           {children}
