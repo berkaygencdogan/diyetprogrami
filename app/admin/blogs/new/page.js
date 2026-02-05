@@ -92,14 +92,17 @@ export default function NewBlogPage() {
           value={selectedTags}
           onChange={setSelectedTags}
           onCreate={async (name) => {
-            const res = await fetch(`${API}/api/tags`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/api/tags`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ name }),
               },
-              body: JSON.stringify({ name }),
-            });
+            );
             const tag = await res.json();
             setTags((prev) => [...prev, tag]);
             return tag;
