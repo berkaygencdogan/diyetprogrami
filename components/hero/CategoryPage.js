@@ -94,10 +94,16 @@ function DietSection({ category }) {
     <section className="mb-20">
       {/* HEADER */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold">🔥 Diyet</h2>
+        <h2 className="w-[90%] text-lg flex font-bold text-white">
+          🔥 Diyet
+          <div
+            className="h-px flex-1 mr-2 ml-2 self-center"
+            style={{ borderColor: category.color, borderWidth: 2 }}
+          />
+        </h2>
         <Link
           href={`/kategori/${category.slug}`}
-          className="text-sm font-semibold text-emerald-600 hover:underline"
+          className="text-sm font-semibold text-white hover:underline"
         >
           Tümünü Gör →
         </Link>
@@ -106,7 +112,14 @@ function DietSection({ category }) {
       {/* SLIDER */}
       <Link
         href={`/blog/${post.slug}`}
-        className="group relative block h-[320px] overflow-hidden rounded-3xl shadow-lg"
+        className="
+  group relative block h-[320px] overflow-hidden rounded-3xl shadow-lg
+  bg-[#F2F7F4]
+  border-4 border-green-400
+  shadow-[0_8px_22px_rgba(34,197,94,0.35)]
+  transition
+  hover:shadow-[0_12px_32px_rgba(34,197,94,0.45)]
+"
       >
         <Image
           src={post.cover_image}
@@ -126,8 +139,8 @@ function DietSection({ category }) {
           }}
           className="absolute left-4 top-1/2 z-10
                      h-10 w-10 -translate-y-1/2
-                     rounded-full bg-black/50 text-white
-                     hover:bg-black/70 transition"
+                     rounded-full bg-white text-black
+                     hover:bg-green-500 transition"
         >
           ‹
         </button>
@@ -140,21 +153,23 @@ function DietSection({ category }) {
           }}
           className="absolute right-4 top-1/2 z-10
                      h-10 w-10 -translate-y-1/2
-                     rounded-full bg-black/50 text-white
-                     hover:bg-black/70 transition"
+                     rounded-full bg-white text-black
+                     hover:bg-green-500 transition"
         >
           ›
         </button>
 
         {/* TEXT */}
         <div className="absolute bottom-6 left-6 right-6 text-white">
+          <h3 className="mt-2 text-2xl font-extrabold leading-tight">
+            {post.title}
+          </h3>
+        </div>
+        <div className="absolute bottom-6  right-6 text-white">
           <CategoryBadge
             name={post.category_name}
             color={post.category_color}
           />
-          <h3 className="mt-2 text-2xl font-extrabold leading-tight">
-            {post.title}
-          </h3>
         </div>
       </Link>
 
@@ -165,7 +180,7 @@ function DietSection({ category }) {
             key={i}
             onClick={() => setIndex(i)}
             className={`h-2 w-2 rounded-full transition ${
-              i === index ? "bg-emerald-600" : "bg-gray-300"
+              i === index ? "bg-green-500" : "bg-white"
             }`}
           />
         ))}

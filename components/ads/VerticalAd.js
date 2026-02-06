@@ -2,7 +2,6 @@ import { getAdSlot } from "@/lib/getAdSlot";
 
 export default async function VerticalAd({ slotId, position }) {
   const ad = await getAdSlot(slotId);
-  console.log("gelen  veri", ad);
   if (!ad?.html_code || !ad.published) return null;
 
   return (

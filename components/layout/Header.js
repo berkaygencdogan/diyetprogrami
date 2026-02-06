@@ -44,7 +44,15 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md ring-1 ring-black/5">
+    <header
+      className="
+    sticky top-0 z-50
+    backdrop-blur-md
+    border-b border-white
+    shadow-[0_1px_6px_rgba(255,255,255,0.15)]
+    mb-10
+  "
+    >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-2">
@@ -177,7 +185,7 @@ function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="text-sm font-medium text-gray-700 hover:text-emerald-600 transition"
+      className="text-sm font-medium text-white hover:text-emerald-600 transition"
     >
       {children}
     </Link>

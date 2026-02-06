@@ -54,11 +54,18 @@ export default function BlogSearch() {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Bloglarda ara..."
-        className="w-full rounded-xl border px-4 py-3 text-sm"
+        className="
+    w-full rounded-xl border border-gray-300
+    px-4 py-3 text-sm text-white
+    bg-transparent
+    focus:outline-none
+    focus:border-green-500
+    focus:ring-2 focus:ring-green-500/40
+  "
       />
 
       {loading && (
-        <div className="absolute right-3 top-3 text-xs text-gray-400">
+        <div className="absolute right-3 top-3 text-xs text-white">
           Aranıyor…
         </div>
       )}
@@ -69,7 +76,7 @@ export default function BlogSearch() {
             <Link
               key={b.id}
               href={`/blog/${b.slug}`}
-              className="block px-4 py-3 text-sm hover:bg-gray-50"
+              className="block px-4 py-3 text-sm hover:bg-green-500"
             >
               <Highlighted text={b.title} query={q} />
             </Link>

@@ -38,9 +38,9 @@ export default function FeaturedPost({ post }) {
 
             <p className="mt-3 text-gray-700 leading-relaxed">{excerpt}</p>
           </div>
-
-          <span
-            className="
+          <div className="w-full flex justify-between">
+            <span
+              className="
   mt-6
   inline-flex
   items-center
@@ -49,9 +49,20 @@ export default function FeaturedPost({ post }) {
   font-semibold
   text-emerald-700
 "
-          >
-            Read article →
-          </span>
+            >
+              Devamını Oku →
+            </span>
+            {post.category_name && (
+              <span
+                className="text-xs font-semibold flex justify-center items-center text-center text-white px-3 py-1 rounded-full"
+                style={{
+                  backgroundColor: `${post.category_color}`,
+                }}
+              >
+                {post.category_name}
+              </span>
+            )}
+          </div>
         </div>
       </article>
     </Link>

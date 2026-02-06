@@ -56,10 +56,21 @@ export default function BlogGridCard({ post }) {
             {excerpt}
           </p>
 
-          {/* READ MORE */}
-          <span className="mt-3 inline-block text-sm font-medium text-emerald-600 group-hover:underline">
-            Devamını oku →
-          </span>
+          <div className="w-full flex justify-between self-end">
+            <span className="mt-3 inline-block text-sm font-medium text-emerald-600 group-hover:underline">
+              Devamını oku →
+            </span>
+            {post.category_name && (
+              <span
+                className="text-xs font-semibold flex justify-center items-center text-center text-white px-3 py-1 rounded-full"
+                style={{
+                  backgroundColor: `${post.category_color}`,
+                }}
+              >
+                {post.category_name}
+              </span>
+            )}
+          </div>
         </div>
       </article>
     </Link>

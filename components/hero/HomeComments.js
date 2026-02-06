@@ -17,7 +17,15 @@ export default function HomeComments() {
 
   return (
     <section className="mx-auto mt-24 max-w-7xl px-4">
-      <div className="rounded-[36px] bg-gradient-to-br from-emerald-50 via-white to-emerald-50 px-6 py-14 md:px-12">
+      <div
+        className="
+    rounded-[36px]
+    bg-gradient-to-br from-[#F2F7F4] via-white to-[#E6F2EC]
+    border-3 border-green-500
+    shadow-[0_12px_40px_rgba(127,175,154,0.25)]
+    px-6 py-14 md:px-12
+  "
+      >
         <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">
           💬 Kullanıcı Deneyimleri
         </h2>
@@ -29,8 +37,16 @@ export default function HomeComments() {
             return (
               <div
                 key={c.comment_id}
-                className="group relative rounded-3xl bg-white p-7 shadow-sm transition-all
-                  hover:-translate-y-1 hover:shadow-xl"
+                className="
+  group relative rounded-3xl
+  bg-[#F2F7F4]
+  border-2 border-[#7FAF9A]
+  p-7
+  shadow-[0_6px_20px_rgba(127,175,154,0.25)]
+  transition-all
+  hover:-translate-y-1
+  hover:shadow-[0_10px_30px_rgba(127,175,154,0.4)]
+"
               >
                 {/* BLOG META */}
                 <Link

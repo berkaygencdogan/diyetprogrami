@@ -9,6 +9,9 @@ export default function SettingsPage() {
 
   const [programAccess, setProgramAccess] = useState("public");
   const [favoriAccess, setFavoriAccess] = useState("public");
+  const [form, setForm] = useState({
+    site_background_color: "#7FAF9A",
+  });
 
   useEffect(() => {
     fetch(`${API}/api/settings`, {
@@ -21,8 +24,16 @@ export default function SettingsPage() {
         if (data.program_access) {
           setProgramAccess(data.program_access);
         }
+
         if (data.favori_access) {
           setFavoriAccess(data.favori_access);
+        }
+
+        if (data.site_background_color) {
+          setForm((prev) => ({
+            ...prev,
+            site_background_color: data.site_background_color,
+          }));
         }
       });
   }, []);
@@ -123,6 +134,27 @@ export default function SettingsPage() {
           Favorilere ekleme ve görüntüleme erişimini belirler.
         </p>
       </section>
+      <label className="block">
+        <span className="text-sm font-medium">Site Arka Plan Rengi</span>
+
+        <input
+          type="color"
+          value={form.site_background_color}
+          onChange={(e) => {
+            const color = e.target.value;
+
+            setForm((prev) => ({
+              ...prev,
+              site_background_color: color,
+            }));
+
+            save("site_background_color", color);
+          }}
+          className="mt-2 h-10 w-20 cursor-pointer rounded"
+        />
+
+        <p className="mt-1 text-xs text-gray-500">Önerilen: #7FAF9A</p>
+      </label>
     </main>
   );
 }

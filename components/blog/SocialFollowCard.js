@@ -83,7 +83,10 @@ export default function SocialFollowCard() {
         >
           🤝
         </span>
-        <h3 className="text-base font-semibold text-gray-800">Bize Katılın</h3>
+        <h3 className="w-full text-base font-semibold text-gray-800">
+          Bize Katılın
+          <div className="mt-1 h-px w-full border-2 border-red-500" />
+        </h3>
       </div>
 
       <div className="grid grid-cols-2 gap-3">

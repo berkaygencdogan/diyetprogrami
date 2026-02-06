@@ -7,12 +7,10 @@ import HorizontalAd from "@/components/ads/HorizontalAd";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  console.log(slug);
   const seo = await fetchRenderedSeo({
     page_key: "category_detail",
     slug,
   });
-  console.log(seo);
   if (!seo?.title) {
     return {
       title: `${slug} | DiyetProgrami.com`,

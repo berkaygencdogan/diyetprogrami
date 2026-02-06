@@ -38,10 +38,20 @@ export default function AdminCommentsPage() {
   /* 🔢 SIRALAMA */
   const sorted = [...filtered].sort((a, b) => {
     if (a.status !== b.status) {
-      return a.status === "pending" ? -1 : 1;
+      if (a.status === "pending") return -1;
+      if (b.status === "pending") return 1;
     }
     return new Date(b.created_at) - new Date(a.created_at);
   });
+
+  /* 🔑 parent yorumları hızlı bulmak için */
+  const commentMap = useMemo(() => {
+    const map = {};
+    comments.forEach((c) => {
+      map[c.id] = c;
+    });
+    return map;
+  }, [comments]);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 space-y-6">
@@ -56,30 +66,41 @@ export default function AdminCommentsPage() {
         className="w-full rounded-xl border px-4 py-2 text-sm"
       />
 
-      {/* 📋 LİSTE */}
       <div className="space-y-4">
         {sorted.map((c) => {
+          const parent = c.parent_id ? commentMap[c.parent_id] : null;
           const isPending = c.status === "pending";
+          const isApproved = c.status === "approved";
+          const isRejected = c.status === "rejected";
           const isHome = c.home === 1;
 
           return (
             <div
               key={c.id}
-              className={`rounded-xl border p-4 space-y-3
-                ${
-                  isPending
-                    ? "border-orange-300 bg-orange-50"
-                    : isHome
-                      ? "border-purple-300 bg-purple-50"
-                      : ""
-                }
+              className={`
+                rounded-xl border p-4 space-y-3
+                ${isPending ? "border-orange-300 bg-orange-50" : ""}
+                ${isRejected ? "border-gray-300 bg-gray-100 opacity-75" : ""}
+                ${isHome ? "border-purple-300 bg-purple-50" : ""}
               `}
             >
+              {/* META */}
               <div className="flex justify-between text-xs text-gray-500">
                 <span>{c.email}</span>
                 <span>{new Date(c.created_at).toLocaleString()}</span>
               </div>
 
+              {/* 🔁 YANITLANAN YORUM */}
+              {parent && (
+                <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3 text-xs text-indigo-900">
+                  <div className="mb-1 font-semibold">↪️ Yanıtlanan yorum:</div>
+                  <div className="italic text-gray-700 line-clamp-3">
+                    “{parent.content}”
+                  </div>
+                </div>
+              )}
+
+              {/* İÇERİK */}
               {editingId === c.id ? (
                 <textarea
                   className="w-full rounded-lg border p-2 text-sm"
@@ -90,9 +111,10 @@ export default function AdminCommentsPage() {
                 <p className="text-sm text-gray-800">{c.content}</p>
               )}
 
+              {/* AKSİYONLAR */}
               <div className="flex flex-wrap gap-2">
-                {/* ONAY */}
-                {isPending && (
+                {/* ✅ ONAYLA */}
+                {(isPending || isRejected) && (
                   <button
                     onClick={() => save(c.id, { status: "approved" })}
                     className="rounded-lg bg-emerald-600 px-3 py-1 text-xs font-semibold text-white"
@@ -101,7 +123,17 @@ export default function AdminCommentsPage() {
                   </button>
                 )}
 
-                {/* DÜZENLE */}
+                {/* ❌ REDDET */}
+                {!isRejected && (
+                  <button
+                    onClick={() => save(c.id, { status: "rejected" })}
+                    className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white"
+                  >
+                    Reddet
+                  </button>
+                )}
+
+                {/* ✏️ DÜZENLE */}
                 {editingId === c.id ? (
                   <button
                     onClick={() => save(c.id, { content: editContent })}
@@ -121,27 +153,23 @@ export default function AdminCommentsPage() {
                   </button>
                 )}
 
-                {/* ANASAYFA */}
-                {isHome ? (
-                  <button
-                    onClick={() => save(c.id, { home: 0 })}
-                    className="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white"
-                  >
-                    Anasayfadan Kaldır
-                  </button>
-                ) : (
-                  <button
-                    onClick={() =>
-                      save(c.id, {
-                        status: "approved",
-                        home: 1,
-                      })
-                    }
-                    className="rounded-lg bg-purple-600 px-3 py-1 text-xs font-semibold text-white"
-                  >
-                    Anasayfaya Al
-                  </button>
-                )}
+                {/* 🏠 ANASAYFA */}
+                {isApproved &&
+                  (isHome ? (
+                    <button
+                      onClick={() => save(c.id, { home: 0 })}
+                      className="rounded-lg bg-gray-600 px-3 py-1 text-xs font-semibold text-white"
+                    >
+                      Anasayfadan Kaldır
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => save(c.id, { home: 1 })}
+                      className="rounded-lg bg-purple-600 px-3 py-1 text-xs font-semibold text-white"
+                    >
+                      Anasayfaya Al
+                    </button>
+                  ))}
               </div>
             </div>
           );

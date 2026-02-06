@@ -7,6 +7,7 @@ import Link from "next/link";
 export default function HeroSlider() {
   const [slides, setSlides] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const AUTO_SLIDE_DELAY = 3000;
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`)
@@ -16,6 +17,16 @@ export default function HeroSlider() {
         setActiveIndex(0);
       });
   }, []);
+
+  useEffect(() => {
+    if (!slides.length) return;
+
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    }, AUTO_SLIDE_DELAY);
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   if (!slides.length) return null;
 
@@ -48,7 +59,7 @@ export default function HeroSlider() {
           />
 
           {/* overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent border-5 border-green-500" />
 
           {active.title && (
             <h2 className="absolute bottom-14 left-6 right-6 text-3xl font-bold leading-tight text-white">
@@ -83,7 +94,7 @@ export default function HeroSlider() {
               e.preventDefault();
               prevSlide();
             }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 px-3 py-2"
+            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white px-3 py-2"
           >
             ‹
           </button>
@@ -93,7 +104,7 @@ export default function HeroSlider() {
               e.preventDefault();
               nextSlide();
             }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 px-3 py-2"
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white px-3 py-2"
           >
             ›
           </button>
@@ -105,7 +116,16 @@ export default function HeroSlider() {
             <div
               key={item.id}
               onClick={() => setActiveIndex(i + 1)}
-              className="group relative cursor-pointer overflow-hidden rounded-lg"
+              className="
+    group relative cursor-pointer overflow-hidden rounded-lg
+    bg-green-500
+    border-3 border-green-500
+    shadow-sm
+    transition
+    hover:shadow-md hover:border-black/10
+    before:absolute before:inset-x-0 before:top-0 before:h-[2px]
+    before:bg-green-500
+  "
             >
               <Image
                 src={item.image}
@@ -116,7 +136,7 @@ export default function HeroSlider() {
                 unoptimized
               />
 
-              <div className="absolute inset-0 bg-black/50" />
+              <div className="absolute inset-0 bg-black/10" />
 
               {item.title && (
                 <p className="absolute bottom-3 left-3 right-3 text-sm font-semibold text-white">
