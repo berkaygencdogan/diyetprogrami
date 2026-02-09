@@ -55,15 +55,7 @@ export default function Header() {
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* LOGO */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/images/diyet-logo.png"
-            alt="Diyet Programı"
-            width={220}
-            height={40}
-            priority
-          />
-        </Link>
+        <Link href="/" className="flex items-center gap-2"></Link>
 
         {/* DESKTOP */}
         <div className="hidden items-center gap-6 md:flex">

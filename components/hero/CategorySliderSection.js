@@ -55,7 +55,6 @@ export default function CategorySliderSection({ category }) {
               src={main.cover_image}
               alt={main.title}
               fill
-              unoptimized
               className="object-cover transition group-hover:scale-105"
             />
           </div>
@@ -90,7 +89,6 @@ export default function CategorySliderSection({ category }) {
                   src={p.cover_image}
                   alt={p.title}
                   fill
-                  unoptimized
                   className="object-cover"
                 />
               </div>

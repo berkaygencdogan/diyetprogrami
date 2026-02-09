@@ -58,7 +58,6 @@ export default async function CategoryDetailPage({ params }) {
                 src={post.cover_image}
                 alt={post.title}
                 fill
-                unoptimized
                 className="object-cover group-hover:scale-105 transition"
               />
             </div>

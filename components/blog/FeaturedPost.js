@@ -26,7 +26,6 @@ export default function FeaturedPost({ post }) {
               src={post.cover_image}
               alt={post.title}
               className="h-full w-full object-cover"
-              loading="lazy"
             />
           )}
         </div>

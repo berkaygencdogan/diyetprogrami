@@ -42,7 +42,6 @@ export default function DietAutoSlider({ posts }) {
           alt={post.title}
           fill
           className="object-cover"
-          unoptimized
         />
 
         <div className="absolute inset-0 bg-black/50" />

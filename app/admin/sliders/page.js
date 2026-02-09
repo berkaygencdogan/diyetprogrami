@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import Image from 'next/image';
+import { useEffect, useState, useCallback, useRef } from "react";
+import Image from "next/image";
 
 export default function AdminSliders() {
   // State management
   const [sliders, setSliders] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [title, setTitle] = useState('');
-  const [image, setImage] = useState('');
-  const [previewSrc, setPreviewSrc] = useState('');
-  const [link, setLink] = useState('');
+  const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
+  const [previewSrc, setPreviewSrc] = useState("");
+  const [link, setLink] = useState("");
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Refs
   const fileInputRef = useRef(null);
@@ -22,8 +22,8 @@ export default function AdminSliders() {
 
   // Get auth token
   const getToken = () => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token');
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("token");
     }
     return null;
   };
@@ -37,7 +37,7 @@ export default function AdminSliders() {
     async (url, options = {}) => {
       const defaultOptions = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...(token && { Authorization: `Bearer ${token}` }),
           ...options.headers,
         },
@@ -51,12 +51,12 @@ export default function AdminSliders() {
         }
         return await response.json();
       } catch (err) {
-        console.error('API Error:', err);
+        console.error("API Error:", err);
         setError(err.message);
         throw err;
       }
     },
-    [token]
+    [token],
   );
 
   /* =========================
@@ -66,10 +66,12 @@ export default function AdminSliders() {
     setLoading(true);
     setError(null);
     try {
-      const data = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`);
+      const data = await apiFetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/sliders`,
+      );
       setSliders(data);
     } catch (err) {
-      setError('Sliderlar yüklenirken bir hata oluştu.');
+      setError("Sliderlar yüklenirken bir hata oluştu.");
     } finally {
       setLoading(false);
     }
@@ -86,16 +88,18 @@ export default function AdminSliders() {
     if (!file) return;
 
     // File validation
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     const maxSize = 5 * 1024 * 1024; // 5MB
 
     if (!validTypes.includes(file.type)) {
-      setError('Lütfen geçerli bir resim dosyası seçin (JPEG, PNG, GIF, WebP).');
+      setError(
+        "Lütfen geçerli bir resim dosyası seçin (JPEG, PNG, GIF, WebP).",
+      );
       return;
     }
 
     if (file.size > maxSize) {
-      setError('Dosya boyutu 5MBtan küçük olmalıdır.');
+      setError("Dosya boyutu 5MBtan küçük olmalıdır.");
       return;
     }
 
@@ -104,34 +108,37 @@ export default function AdminSliders() {
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload/image`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/upload/image`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
         },
-        body: formData,
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Resim yüklenemedi.');
+        throw new Error("Resim yüklenemedi.");
       }
 
       const json = await response.json();
       const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${json.location}`;
 
       setImage(fullUrl);
-      
+
       // Create preview URL
       const objectUrl = URL.createObjectURL(file);
       setPreviewSrc(objectUrl);
-      
+
       // Return cleanup function
       return () => URL.revokeObjectURL(objectUrl);
     } catch (err) {
-      setError('Resim yüklenirken bir hata oluştu.');
-      console.error('Upload error:', err);
+      setError("Resim yüklenirken bir hata oluştu.");
+      console.error("Upload error:", err);
     } finally {
       setUploading(false);
     }
@@ -147,7 +154,7 @@ export default function AdminSliders() {
 
     // Validation
     if (!image) {
-      setError('Lütfen bir slider görseli seçin.');
+      setError("Lütfen bir slider görseli seçin.");
       return;
     }
 
@@ -159,27 +166,32 @@ export default function AdminSliders() {
         try {
           // 1. Yeni slider oluştur
           await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`, {
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(payload),
           });
 
           // 2. Eski slider'ı sil
-          await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders/${editingId}`, {
-            method: 'DELETE',
-          });
+          await apiFetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/sliders/${editingId}`,
+            {
+              method: "DELETE",
+            },
+          );
 
-          setSuccessMessage('Slider başarıyla güncellendi (yeni oluşturulup eski silindi).');
+          setSuccessMessage(
+            "Slider başarıyla güncellendi (yeni oluşturulup eski silindi).",
+          );
         } catch (updateErr) {
-          console.error('Update error:', updateErr);
-          throw new Error('Slider güncellenirken bir hata oluştu.');
+          console.error("Update error:", updateErr);
+          throw new Error("Slider güncellenirken bir hata oluştu.");
         }
       } else {
         // YENİ SLIDER EKLEME
         await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`, {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify(payload),
         });
-        setSuccessMessage('Slider başarıyla eklendi.');
+        setSuccessMessage("Slider başarıyla eklendi.");
       }
 
       // Clear success message after 3 seconds
@@ -187,13 +199,13 @@ export default function AdminSliders() {
         clearTimeout(successTimeoutRef.current);
       }
       successTimeoutRef.current = setTimeout(() => {
-        setSuccessMessage('');
+        setSuccessMessage("");
       }, 3000);
 
       resetForm();
       loadSliders();
     } catch (err) {
-      setError('Slider kaydedilirken bir hata oluştu: ' + err.message);
+      setError("Slider kaydedilirken bir hata oluştu: " + err.message);
     }
   };
 
@@ -202,43 +214,43 @@ export default function AdminSliders() {
   ========================= */
   const resetForm = () => {
     setEditingId(null);
-    setTitle('');
-    setImage('');
-    setPreviewSrc('');
-    setLink('');
+    setTitle("");
+    setImage("");
+    setPreviewSrc("");
+    setLink("");
     setError(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   const edit = (slider) => {
     setEditingId(slider.id);
-    setTitle(slider.title || '');
-    setImage(slider.image || '');
-    setPreviewSrc(slider.image || '');
-    setLink(slider.link || '');
+    setTitle(slider.title || "");
+    setImage(slider.image || "");
+    setPreviewSrc(slider.image || "");
+    setLink(slider.link || "");
     setError(null);
-    setSuccessMessage('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setSuccessMessage("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const remove = async (id) => {
-    if (!window.confirm('Bu sliderı silmek istediğinize emin misiniz?')) {
+    if (!window.confirm("Bu sliderı silmek istediğinize emin misiniz?")) {
       return;
     }
 
     try {
       await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
-      setSuccessMessage('Slider başarıyla silindi.');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      setSuccessMessage("Slider başarıyla silindi.");
+      setTimeout(() => setSuccessMessage(""), 3000);
 
       loadSliders();
     } catch (err) {
-      setError('Slider silinirken bir hata oluştu.');
+      setError("Slider silinirken bir hata oluştu.");
     }
   };
 
@@ -260,9 +272,9 @@ export default function AdminSliders() {
   // Handle image replacement
   const handleReplaceImage = () => {
     // Clear current image
-    setImage('');
-    setPreviewSrc('');
-    
+    setImage("");
+    setPreviewSrc("");
+
     // Trigger file input
     setTimeout(() => {
       if (fileInputRef.current) {
@@ -316,7 +328,9 @@ export default function AdminSliders() {
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-emerald-800">{successMessage}</p>
+              <p className="text-sm font-medium text-emerald-800">
+                {successMessage}
+              </p>
             </div>
           </div>
         </div>
@@ -356,7 +370,7 @@ export default function AdminSliders() {
               </span>
             </div>
           ) : (
-            'Yeni Slider Ekle'
+            "Yeni Slider Ekle"
           )}
         </h2>
 
@@ -401,8 +415,8 @@ export default function AdminSliders() {
                 onClick={triggerFileInput}
                 className={`relative cursor-pointer overflow-hidden rounded-xl border-2 border-dashed transition-all duration-200 ${
                   previewSrc || image
-                    ? 'border-gray-300 hover:border-gray-400'
-                    : 'border-gray-300 hover:border-emerald-400 hover:bg-emerald-50'
+                    ? "border-gray-300 hover:border-gray-400"
+                    : "border-gray-300 hover:border-emerald-400 hover:bg-emerald-50"
                 }`}
               >
                 {previewSrc || image ? (
@@ -412,7 +426,6 @@ export default function AdminSliders() {
                       alt="Slider preview"
                       fill
                       className="object-contain p-4"
-                      unoptimized
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       priority={editingId !== null}
                     />
@@ -432,7 +445,9 @@ export default function AdminSliders() {
                               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
                             />
                           </svg>
-                          {editingId && image && !previewSrc ? 'Görseli Koru veya Değiştir' : 'Görseli Değiştir'}
+                          {editingId && image && !previewSrc
+                            ? "Görseli Koru veya Değiştir"
+                            : "Görseli Değiştir"}
                         </p>
                       </div>
                     </div>
@@ -491,10 +506,10 @@ export default function AdminSliders() {
                     <button
                       type="button"
                       onClick={() => {
-                        setImage('');
-                        setPreviewSrc('');
+                        setImage("");
+                        setPreviewSrc("");
                         if (fileInputRef.current) {
-                          fileInputRef.current.value = '';
+                          fileInputRef.current.value = "";
                         }
                       }}
                       className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
@@ -524,13 +539,14 @@ export default function AdminSliders() {
                   )}
                 </div>
               )}
-              
+
               {/* Info Message for Editing */}
               {editingId && image && !previewSrc && (
                 <div className="rounded-lg bg-blue-50 p-3">
                   <p className="text-sm text-blue-700">
-                    <span className="font-medium">Not:</span> Mevcut görsel kullanılacak. 
-                    Yeni görsel yüklemezseniz mevcut görsel korunacak.
+                    <span className="font-medium">Not:</span> Mevcut görsel
+                    kullanılacak. Yeni görsel yüklemezseniz mevcut görsel
+                    korunacak.
                   </p>
                 </div>
               )}
@@ -560,11 +576,18 @@ export default function AdminSliders() {
             <div className="rounded-lg bg-yellow-50 p-4">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  <svg
+                    className="h-5 w-5 text-yellow-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
-           
               </div>
             </div>
           )}
@@ -582,9 +605,9 @@ export default function AdminSliders() {
                   Yükleniyor...
                 </>
               ) : editingId ? (
-                'Düzenle'
+                "Düzenle"
               ) : (
-                'Slidera Ekle'
+                "Slidera Ekle"
               )}
             </button>
 
@@ -645,10 +668,9 @@ export default function AdminSliders() {
                   {slider.image ? (
                     <Image
                       src={slider.image}
-                      alt={slider.title || 'Slider görseli'}
+                      alt={slider.title || "Slider görseli"}
                       fill
                       className="object-cover"
-                      unoptimized
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
@@ -674,7 +696,7 @@ export default function AdminSliders() {
                 <div className="p-4">
                   <div className="mb-4">
                     <h3 className="font-semibold text-gray-900">
-                      {slider.title || 'Başlıksız Slider'}
+                      {slider.title || "Başlıksız Slider"}
                     </h3>
                     {slider.link && (
                       <p className="mt-1 truncate text-sm text-gray-500">

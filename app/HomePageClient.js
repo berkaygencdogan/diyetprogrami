@@ -9,32 +9,64 @@ import VerticalAd from "@/components/ads/VerticalAd";
 export default async function HomePage() {
   return (
     <main>
-      <HeroSlider />
+      {/* HERO – LCP + sabit yükseklik */}
+      <section className="min-h-[420px]">
+        <HeroSlider />
+      </section>
 
-      <div className="relative mt-16">
-        <aside className="hidden xl:block absolute left-0 top-0 h-full">
+      {/* MAIN CONTENT */}
+      <section className="relative mt-16 min-h-[1400px]">
+        {/* LEFT AD */}
+        <aside className="hidden xl:block absolute left-0 top-0 min-h-[600px]">
           <VerticalAd slotId="HOME_LEFT_1" position="left" />
         </aside>
 
-        <aside className="hidden xl:block absolute right-0 top-0 h-full">
+        {/* RIGHT AD */}
+        <aside className="hidden xl:block absolute right-0 top-0 min-h-[600px]">
           <VerticalAd slotId="HOME_RIGHT_1" position="right" />
         </aside>
 
         <div className="mx-auto max-w-7xl px-4">
-          <FeaturedPostsSlider />
-          <HorizontalAd slotId="HOME_HORIZONTAL_1" />
-          <PopularBlogs />
-          <HorizontalAd slotId="HOME_HORIZONTAL_2" />
-          <CategoryPage />
-          <HorizontalAd slotId="HOME_HORIZONTAL_3" />
-        </div>
+          {/* FEATURED POSTS */}
+          <section className="min-h-[300px]">
+            <FeaturedPostsSlider />
+          </section>
 
-        <div className="mx-auto max-w-7xl px-4">
-          <HomeComments />
-          <div className="my-16">
-            <HorizontalAd slotId="HOME_HORIZONTAL_4" />
+          {/* AD */}
+          <div className="my-12 min-h-[90px]">
+            <HorizontalAd slotId="HOME_HORIZONTAL_1" />
+          </div>
+
+          {/* POPULAR BLOGS */}
+          <section className="min-h-[360px]">
+            <PopularBlogs />
+          </section>
+
+          {/* AD */}
+          <div className="my-12 min-h-[90px]">
+            <HorizontalAd slotId="HOME_HORIZONTAL_2" />
+          </div>
+
+          {/* CATEGORY PAGE */}
+          <section className="min-h-[800px]">
+            <CategoryPage />
+          </section>
+
+          {/* AD */}
+          <div className="my-12 min-h-[90px]">
+            <HorizontalAd slotId="HOME_HORIZONTAL_3" />
           </div>
         </div>
+      </section>
+
+      {/* COMMENTS */}
+      <section className="mx-auto max-w-7xl px-4 min-h-[400px]">
+        <HomeComments />
+      </section>
+
+      {/* LAST AD */}
+      <div className="mx-auto max-w-7xl px-4 my-16 min-h-[90px]">
+        <HorizontalAd slotId="HOME_HORIZONTAL_4" />
       </div>
     </main>
   );

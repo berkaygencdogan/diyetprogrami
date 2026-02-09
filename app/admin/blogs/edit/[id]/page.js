@@ -235,7 +235,6 @@ export default function EditBlogPage({ params }) {
                 width={400}
                 height={250}
                 className="rounded-lg object-cover"
-                unoptimized
                 onError={(e) => {
                   console.error("❌ Görsel yüklenemedi:", imagePreview);
                   setImageError(true); // ✅ Sadece hata state'ini güncelle

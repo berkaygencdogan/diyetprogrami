@@ -9,7 +9,6 @@ export default function BlogLayout({ title, date, cover, children }) {
           src={cover}
           alt={title}
           className="h-full w-full object-cover transition group-hover:scale-105"
-          loading="lazy"
         />
       </div>
 

@@ -61,7 +61,7 @@ export default function FeaturedPostsSlider() {
                 src={post.cover_image}
                 alt={post.title}
                 fill
-                unoptimized
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 300px"
                 className="object-cover transition group-hover:scale-105"
               />
             </div>

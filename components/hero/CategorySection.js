@@ -30,7 +30,6 @@ export default function CategorySection({ title, slug, posts }) {
               src={main.cover_image}
               alt={main.title}
               fill
-              unoptimized
               className="object-cover transition group-hover:scale-105"
             />
           </div>
@@ -60,7 +59,6 @@ export default function CategorySection({ title, slug, posts }) {
                   src={post.cover_image}
                   alt={post.title}
                   fill
-                  unoptimized
                   className="object-cover"
                 />
               </div>

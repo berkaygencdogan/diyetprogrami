@@ -29,7 +29,6 @@ export default function HealthyLifeGrid({ posts }) {
               src={post.cover_image}
               alt={post.title}
               fill
-              unoptimized
               className="object-cover transition group-hover:scale-110"
             />
 
