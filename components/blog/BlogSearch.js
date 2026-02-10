@@ -56,7 +56,7 @@ export default function BlogSearch() {
         placeholder="Bloglarda ara..."
         className="
     w-full rounded-xl border border-gray-300
-    px-4 py-3 text-sm text-white
+    px-4 py-3 text-sm text-black
     bg-transparent
     focus:outline-none
     focus:border-green-500

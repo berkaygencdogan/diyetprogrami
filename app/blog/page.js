@@ -42,7 +42,7 @@ export default async function BlogPage({ searchParams }) {
       <section className="relative mx-auto max-w-7xl px-4 py-10">
         {/* HEADER */}
         <div className="mb-6 space-y-4">
-          <h1 className="text-3xl font-bold text-white">Blog</h1>
+          <h1 className="text-3xl font-bold text-black">Blog</h1>
           <BlogSearch />
         </div>
         <BlogPageClient blogs={blogs} categories={categories} query={query} />

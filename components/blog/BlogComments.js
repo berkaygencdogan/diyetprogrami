@@ -34,7 +34,10 @@ function CommentItem({ comment, blogId }) {
 
       <div className="flex gap-3 text-xs text-emerald-600">
         {comment.replies.length > 0 && (
-          <button onClick={() => setShowReplies((v) => !v)}>
+          <button
+            onClick={() => setShowReplies((v) => !v)}
+            className="cursor-pointer hover:underline"
+          >
             {showReplies
               ? "Yanıtları gizle"
               : `Yanıtları gör (${comment.replies.length})`}

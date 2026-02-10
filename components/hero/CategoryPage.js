@@ -7,13 +7,17 @@ import Link from "next/link";
 import Image from "next/image";
 import CategoryBadge from "../blog/CategoryBadge";
 import CategorySliderSection from "./CategorySliderSection";
+import { getTextColor } from "@/lib/textColor";
 
 export default function CategoryPage() {
   const [categories, setCategories] = useState([]);
+  const [textColor, setTextColor] = useState({});
+
   useEffect(() => {
     async function load() {
       const cats = await fetchCategories();
-
+      const renk = await getTextColor();
+      setTextColor(renk);
       const withPosts = await Promise.all(
         cats.map(async (cat) => {
           const posts = await fetchBlogsByCategory(cat.slug);
@@ -37,7 +41,7 @@ export default function CategoryPage() {
         if (layoutType === 0) {
           return (
             <React.Fragment key={cat.id}>
-              <DietSection category={cat} />
+              <DietSection category={cat} textColor={textColor} />
               {/* <HorizontalAd /> */}
             </React.Fragment>
           );
@@ -46,7 +50,7 @@ export default function CategoryPage() {
         if (layoutType === 1) {
           return (
             <React.Fragment key={cat.id}>
-              <CategorySliderSection category={cat} />
+              <CategorySliderSection category={cat} textColor={textColor} />
 
               {/* <HorizontalAd /> */}
             </React.Fragment>
@@ -55,7 +59,7 @@ export default function CategoryPage() {
 
         return (
           <React.Fragment key={cat.id}>
-            <CategorySliderSection category={cat} />
+            <CategorySliderSection category={cat} textColor={textColor} />
 
             {/* <HorizontalAd /> */}
           </React.Fragment>
@@ -68,7 +72,7 @@ export default function CategoryPage() {
 /* =======================
    🔥 DİYET – SLIDER
 ======================= */
-function DietSection({ category }) {
+function DietSection({ category, textColor }) {
   const posts = category.posts;
   const [index, setIndex] = useState(0);
 
@@ -94,7 +98,9 @@ function DietSection({ category }) {
     <section className="mb-20">
       {/* HEADER */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="w-[90%] text-lg flex font-bold text-white">
+        <h2
+          className={`w-[90%] text-lg flex text-xl font-bold ${textColor.title}`}
+        >
           🔥 Diyet
           <div
             className="h-px flex-1 mr-2 ml-2 self-center"
@@ -103,7 +109,7 @@ function DietSection({ category }) {
         </h2>
         <Link
           href={`/kategori/${category.slug}`}
-          className="text-sm font-semibold text-white hover:underline"
+          className={`text-sm font-semiboldhover:underline ${textColor.all}`}
         >
           Tümünü Gör →
         </Link>
@@ -182,7 +188,7 @@ function DietSection({ category }) {
             aria-label={`Slayt ${i + 1}`}
             title={`Slayt ${i + 1}`}
             className={`h-2 w-2 rounded-full transition ${
-              i === index ? "bg-green-500" : "bg-white"
+              i === index ? "bg-green-500" : "bg-black"
             }`}
           />
         ))}

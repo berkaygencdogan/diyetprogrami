@@ -48,7 +48,7 @@ export default function Header() {
       className="
     sticky top-0 z-50
     backdrop-blur-md
-    border-b border-white
+    border-b border-black
     shadow-[0_1px_6px_rgba(255,255,255,0.15)]
     mb-10
   "
@@ -177,7 +177,7 @@ function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="text-sm font-medium text-white hover:text-emerald-600 transition"
+      className="text-sm font-medium text-black hover:text-emerald-600 transition"
     >
       {children}
     </Link>

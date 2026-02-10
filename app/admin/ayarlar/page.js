@@ -9,9 +9,17 @@ export default function SettingsPage() {
 
   const [programAccess, setProgramAccess] = useState("public");
   const [favoriAccess, setFavoriAccess] = useState("public");
+
   const [form, setForm] = useState({
     site_background_color: "#7FAF9A",
   });
+
+  const [textColorSettings, setTextColorSettings] = useState({
+    title: "text-white",
+    all: "text-green-500",
+  });
+
+  /* ================= FETCH ================= */
 
   useEffect(() => {
     fetch(`${API}/api/settings`, {
@@ -21,13 +29,8 @@ export default function SettingsPage() {
     })
       .then((r) => r.json())
       .then((data) => {
-        if (data.program_access) {
-          setProgramAccess(data.program_access);
-        }
-
-        if (data.favori_access) {
-          setFavoriAccess(data.favori_access);
-        }
+        if (data.program_access) setProgramAccess(data.program_access);
+        if (data.favori_access) setFavoriAccess(data.favori_access);
 
         if (data.site_background_color) {
           setForm((prev) => ({
@@ -35,8 +38,17 @@ export default function SettingsPage() {
             site_background_color: data.site_background_color,
           }));
         }
+
+        if (data.title_text_color || data.all_text_color) {
+          setTextColorSettings({
+            title: data.title_text_color || "text-white",
+            all: data.all_text_color || "text-green-500",
+          });
+        }
       });
   }, []);
+
+  /* ================= SAVE ================= */
 
   const save = async (key, value) => {
     await fetch(`${API}/api/settings`, {
@@ -48,6 +60,8 @@ export default function SettingsPage() {
       body: JSON.stringify({ key, value }),
     });
   };
+
+  /* ================= UI ================= */
 
   return (
     <main className="max-w-3xl mx-auto p-6 space-y-10">
@@ -63,12 +77,11 @@ export default function SettingsPage() {
               setProgramAccess("public");
               save("program_access", "public");
             }}
-            className={`px-4 py-2 rounded-xl border
-              ${
-                programAccess === "public"
-                  ? "bg-emerald-500 text-white"
-                  : "bg-gray-100"
-              }`}
+            className={`px-4 py-2 rounded-xl border ${
+              programAccess === "public"
+                ? "bg-emerald-500 text-white"
+                : "bg-gray-100"
+            }`}
           >
             Herkese Açık
           </button>
@@ -78,20 +91,15 @@ export default function SettingsPage() {
               setProgramAccess("auth");
               save("program_access", "auth");
             }}
-            className={`px-4 py-2 rounded-xl border
-              ${
-                programAccess === "auth"
-                  ? "bg-emerald-500 text-white"
-                  : "bg-gray-100"
-              }`}
+            className={`px-4 py-2 rounded-xl border ${
+              programAccess === "auth"
+                ? "bg-emerald-500 text-white"
+                : "bg-gray-100"
+            }`}
           >
             Sadece Giriş Yapanlar
           </button>
         </div>
-
-        <p className="text-sm text-gray-500">
-          Program oluşturma ve görüntüleme erişimini belirler.
-        </p>
       </section>
 
       {/* FAVORİ */}
@@ -104,12 +112,11 @@ export default function SettingsPage() {
               setFavoriAccess("public");
               save("favori_access", "public");
             }}
-            className={`px-4 py-2 rounded-xl border
-              ${
-                favoriAccess === "public"
-                  ? "bg-emerald-500 text-white"
-                  : "bg-gray-100"
-              }`}
+            className={`px-4 py-2 rounded-xl border ${
+              favoriAccess === "public"
+                ? "bg-emerald-500 text-white"
+                : "bg-gray-100"
+            }`}
           >
             Herkese Açık
           </button>
@@ -119,22 +126,19 @@ export default function SettingsPage() {
               setFavoriAccess("auth");
               save("favori_access", "auth");
             }}
-            className={`px-4 py-2 rounded-xl border
-              ${
-                favoriAccess === "auth"
-                  ? "bg-emerald-500 text-white"
-                  : "bg-gray-100"
-              }`}
+            className={`px-4 py-2 rounded-xl border ${
+              favoriAccess === "auth"
+                ? "bg-emerald-500 text-white"
+                : "bg-gray-100"
+            }`}
           >
             Sadece Giriş Yapanlar
           </button>
         </div>
-
-        <p className="text-sm text-gray-500">
-          Favorilere ekleme ve görüntüleme erişimini belirler.
-        </p>
       </section>
-      <label className="block">
+
+      {/* BACKGROUND COLOR */}
+      <section className="rounded-2xl border bg-white p-6 space-y-2">
         <span className="text-sm font-medium">Site Arka Plan Rengi</span>
 
         <input
@@ -150,11 +154,98 @@ export default function SettingsPage() {
 
             save("site_background_color", color);
           }}
-          className="mt-2 h-10 w-20 cursor-pointer rounded"
+          className="h-10 w-20 cursor-pointer rounded"
         />
 
-        <p className="mt-1 text-xs text-gray-500">Önerilen: #7FAF9A</p>
-      </label>
+        <p className="text-xs text-gray-500">Önerilen: #7FAF9A</p>
+      </section>
+
+      {/* TEXT COLORS */}
+      <section className="rounded-2xl border bg-white p-6 space-y-6">
+        <h2 className="font-semibold text-lg">Metin Renkleri</h2>
+
+        {/* TITLE */}
+        <div>
+          <p className="mb-2 text-sm font-medium">Başlık Rengi</p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                setTextColorSettings((p) => ({
+                  ...p,
+                  title: "text-white",
+                }));
+                save("title_text_color", "text-white");
+              }}
+              className={`px-4 py-2 rounded-xl border ${
+                textColorSettings.title === "text-white"
+                  ? "bg-emerald-500 text-white"
+                  : "bg-gray-100"
+              }`}
+            >
+              Beyaz
+            </button>
+
+            <button
+              onClick={() => {
+                setTextColorSettings((p) => ({
+                  ...p,
+                  title: "text-black",
+                }));
+                save("title_text_color", "text-black");
+              }}
+              className={`px-4 py-2 rounded-xl border ${
+                textColorSettings.title === "text-black"
+                  ? "bg-emerald-500 text-white"
+                  : "bg-gray-100"
+              }`}
+            >
+              Siyah
+            </button>
+          </div>
+        </div>
+
+        {/* ALL */}
+        <div>
+          <p className="mb-2 text-sm font-medium">“Tümünü Gör” Rengi</p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                setTextColorSettings((p) => ({
+                  ...p,
+                  all: "text-white",
+                }));
+                save("all_text_color", "text-white");
+              }}
+              className={`px-4 py-2 rounded-xl border ${
+                textColorSettings.all === "text-white"
+                  ? "bg-emerald-500 text-white"
+                  : "bg-gray-100"
+              }`}
+            >
+              Beyaz
+            </button>
+
+            <button
+              onClick={() => {
+                setTextColorSettings((p) => ({
+                  ...p,
+                  all: "text-green-500",
+                }));
+                save("all_text_color", "text-green-500");
+              }}
+              className={`px-4 py-2 rounded-xl border ${
+                textColorSettings.all === "text-green-500"
+                  ? "bg-emerald-500 text-white"
+                  : "bg-gray-100"
+              }`}
+            >
+              Yeşil
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

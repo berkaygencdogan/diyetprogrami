@@ -10,7 +10,7 @@ export default function CommentCard({ comment, onReply }) {
 
       <button
         onClick={onReply}
-        className="mt-2 text-xs font-semibold text-emerald-600 hover:underline"
+        className="mt-2 text-xs font-semibold text-emerald-600 hover:underline cursor-pointer"
       >
         Yanıtla
       </button>

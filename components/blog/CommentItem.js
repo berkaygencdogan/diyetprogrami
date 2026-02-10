@@ -7,7 +7,7 @@ export default function CommentItem({ comment, onReply }) {
 
         <button
           onClick={() => onReply(comment.id)}
-          className="mt-2 text-xs text-emerald-600"
+          className="mt-2 text-xs text-emerald-600 cursor-pointer hover:underline"
         >
           Yanıtla
         </button>

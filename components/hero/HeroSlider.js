@@ -4,29 +4,21 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function HeroSlider() {
-  const [slides, setSlides] = useState([]);
+export default function HeroSlider({ slides }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const AUTO_SLIDE_DELAY = 3000;
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`)
-      .then((r) => r.json())
-      .then((data) => {
-        setSlides(data || []);
-        setActiveIndex(0);
-      });
-  }, []);
+    if (!slides?.length) return;
 
-  useEffect(() => {
-    if (!slides.length) return;
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
     }, AUTO_SLIDE_DELAY);
-    return () => clearInterval(interval);
-  }, [slides.length]);
 
-  if (!slides.length) return null;
+    return () => clearInterval(interval);
+  }, [slides]);
+
+  if (!slides?.length) return null;
 
   const active = slides[activeIndex];
 
@@ -42,7 +34,7 @@ export default function HeroSlider() {
             src={active.image}
             alt={active.title || "Slider"}
             fill
-            fetchPriority="high" // ✅ SADECE BURADA
+            priority // ✅ LCP için DOĞRU
             sizes="(max-width: 1024px) 100vw, 900px"
             className="object-cover"
           />
@@ -59,10 +51,11 @@ export default function HeroSlider() {
         {/* ================= RIGHT SLIDES ================= */}
         <div className="flex flex-col gap-4">
           {slides.slice(1, 4).map((item, i) => (
-            <div
+            <button
               key={item.id}
               onClick={() => setActiveIndex(i + 1)}
-              className="group relative cursor-pointer overflow-hidden rounded-lg"
+              className="group relative overflow-hidden rounded-lg text-left"
+              aria-label={`Slayt ${i + 2}`}
             >
               <Image
                 src={item.image}
@@ -80,7 +73,7 @@ export default function HeroSlider() {
                   {item.title}
                 </p>
               )}
-            </div>
+            </button>
           ))}
         </div>
       </div>

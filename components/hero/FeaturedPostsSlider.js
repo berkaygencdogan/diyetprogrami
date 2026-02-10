@@ -6,15 +6,19 @@ import { useEffect, useState } from "react";
 import { fetchLatestBlogs } from "@/lib/blogApi";
 import CategoryBadge from "../blog/CategoryBadge";
 import { fetchCategories } from "@/lib/api";
+import { getTextColor } from "@/lib/textColor";
 
 export default function FeaturedPostsSlider() {
   const [posts, setPosts] = useState([]);
   const [color, setColor] = useState("white");
+  const [textColor, setTextColor] = useState({});
   useEffect(() => {
     fetchLatestBlogs().then(setPosts).catch(console.error);
     async function load() {
       const cats = await fetchCategories();
       setColor(cats[3].color);
+      const renk = await getTextColor();
+      setTextColor(renk);
     }
 
     load();
@@ -26,14 +30,16 @@ export default function FeaturedPostsSlider() {
     <section className="mx-auto mt-20 max-w-7xl px-4">
       {/* HEADER */}
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white">📰 Son Eklenen Yazılar</h2>
+        <h2 className={`text-xl font-bold ${textColor.title}`}>
+          📰 Son Eklenen Yazılar
+        </h2>
         <div
           className="h-px flex-1 mr-2 ml-2"
           style={{ borderWidth: 2, borderColor: color }}
         />
         <Link
           href="/blog"
-          className="text-sm font-semibold text-white hover:underline"
+          className={`text-sm font-semibold ${textColor.all} hover:underline`}
         >
           Tüm Yazılar →
         </Link>

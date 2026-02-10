@@ -7,11 +7,15 @@ import HorizontalAd from "@/components/ads/HorizontalAd";
 import VerticalAd from "@/components/ads/VerticalAd";
 
 export default async function HomePage() {
+  const slides = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sliders`, {
+    cache: "no-store",
+  }).then((r) => r.json());
+
   return (
     <main>
       {/* HERO – LCP + sabit yükseklik */}
       <section className="min-h-[420px]">
-        <HeroSlider />
+        <HeroSlider slides={slides} />
       </section>
 
       {/* MAIN CONTENT */}
@@ -33,7 +37,7 @@ export default async function HomePage() {
           </section>
 
           {/* AD */}
-          <div className="my-12 min-h-[90px]">
+          <div className="my-12">
             <HorizontalAd slotId="HOME_HORIZONTAL_1" />
           </div>
 
@@ -43,7 +47,7 @@ export default async function HomePage() {
           </section>
 
           {/* AD */}
-          <div className="my-12 min-h-[90px]">
+          <div className="my-12">
             <HorizontalAd slotId="HOME_HORIZONTAL_2" />
           </div>
 
@@ -53,7 +57,7 @@ export default async function HomePage() {
           </section>
 
           {/* AD */}
-          <div className="my-12 min-h-[90px]">
+          <div className="my-12">
             <HorizontalAd slotId="HOME_HORIZONTAL_3" />
           </div>
         </div>
@@ -65,7 +69,7 @@ export default async function HomePage() {
       </section>
 
       {/* LAST AD */}
-      <div className="mx-auto max-w-7xl px-4 my-16 min-h-[90px]">
+      <div className="mx-auto max-w-7xl px-4 my-16">
         <HorizontalAd slotId="HOME_HORIZONTAL_4" />
       </div>
     </main>

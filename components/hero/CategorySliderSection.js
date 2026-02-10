@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import CategoryBadge from "../blog/CategoryBadge";
 
-export default function CategorySliderSection({ category }) {
+export default function CategorySliderSection({ category, textColor }) {
   const posts = category.posts;
   const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % posts.length);
+    }, 5000); // 5 saniye
+
+    return () => clearInterval(interval);
+  }, [posts.length]);
+
   if (!posts?.length) return null;
 
   const main = posts[index];
@@ -21,7 +29,7 @@ export default function CategorySliderSection({ category }) {
     <section className="mb-20">
       {/* HEADER */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="w-[90%] text-lg flex font-bold text-white">
+        <h2 className={`w-[90%] text-lg flex font-bold ${textColor.title}`}>
           {category.name}
           <div
             className="h-[2px] flex-1 mr-2 ml-2 self-center"
@@ -30,7 +38,7 @@ export default function CategorySliderSection({ category }) {
         </h2>
         <Link
           href={`/kategori/${category.slug}`}
-          className="text-sm font-semibold text-white hover:underline"
+          className={`text-sm font-semibold ${textColor.all} hover:underline`}
         >
           Tümünü Gör →
         </Link>
@@ -124,7 +132,7 @@ export default function CategorySliderSection({ category }) {
             key={i}
             onClick={() => setIndex(i)}
             className={`text-sm font-semibold ${
-              i === index ? "text-white underline" : "text-black"
+              i === index ? textColor.all : "text-black"
             }`}
           >
             {i + 1}

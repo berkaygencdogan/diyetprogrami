@@ -5,10 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchCategories } from "@/lib/api";
 import CategoryBadge from "./CategoryBadge";
+import { getTextColor } from "@/lib/textColor";
 
 export default function PopularBlogs() {
   const [posts, setPosts] = useState([]);
   const [color, setColor] = useState("white");
+  const [textColor, setTextColor] = useState({});
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/popular`)
@@ -18,6 +20,8 @@ export default function PopularBlogs() {
     async function load() {
       const cats = await fetchCategories();
       setColor(cats[4].color);
+      const renk = await getTextColor();
+      setTextColor(renk);
     }
 
     load();
@@ -27,7 +31,7 @@ export default function PopularBlogs() {
 
   return (
     <section className="mx-auto max-w-7xl px-4">
-      <h2 className="mb-6 flex text-xl font-bold text-white">
+      <h2 className={`mb-6 flex text-xl font-bold ${textColor.title}`}>
         🔥 En Çok Okunanlar
         <div
           className="ml-2 mr-2 h-px flex-1 self-center"
