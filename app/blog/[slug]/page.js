@@ -126,7 +126,6 @@ export default async function BlogDetailPage({ params }) {
             <BlogSidebar categories={categories} blogs={related} />
           </div>
         </div>
-        <PopularBlogs />
         <div className="my-16">
           <HorizontalAd slotId="BLOGDETAIL_HORIZONTAL_1" />
         </div>

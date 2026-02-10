@@ -48,9 +48,9 @@ export default function PopularBlogs() {
               group flex h-full flex-col
               overflow-hidden rounded-2xl
               bg-[#F2F7F4]
-              border-4 border-green-400
+              border-4 border-[#7FAF9A]
               transition
-              hover:shadow-[0_10px_28px_rgba(127,175,154,0.35)]
+              
             "
           >
             {/* IMAGE */}

@@ -121,7 +121,7 @@ function DietSection({ category, textColor }) {
         className="
   group relative block h-[320px] overflow-hidden rounded-3xl shadow-lg
   bg-[#F2F7F4]
-  border-4 border-green-400
+  border-4 border-[#7FAF9A]
   shadow-[0_8px_22px_rgba(34,197,94,0.35)]
   transition
   hover:shadow-[0_12px_32px_rgba(34,197,94,0.45)]

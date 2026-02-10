@@ -21,8 +21,7 @@ export default function HomeComments() {
         className="
     rounded-[36px]
     bg-gradient-to-br from-[#F2F7F4] via-white to-[#E6F2EC]
-    border-3 border-green-500
-    shadow-[0_12px_40px_rgba(127,175,154,0.25)]
+    border-3 border-[#7FAF9A]
     px-6 py-14 md:px-12
   "
       >

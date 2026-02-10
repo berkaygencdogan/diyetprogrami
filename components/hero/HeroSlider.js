@@ -24,11 +24,11 @@ export default function HeroSlider({ slides }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 ">
         {/* ================= LCP HERO ================= */}
         <Link
           href={active.link || "#"}
-          className="relative col-span-3 h-[420px] overflow-hidden rounded-xl"
+          className="relative col-span-3 h-[420px] overflow-hidden rounded-xl border-2 border-[#7FAF9A]"
         >
           <Image
             src={active.image}
@@ -49,12 +49,12 @@ export default function HeroSlider({ slides }) {
         </Link>
 
         {/* ================= RIGHT SLIDES ================= */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col justify-between">
           {slides.slice(1, 4).map((item, i) => (
             <button
               key={item.id}
               onClick={() => setActiveIndex(i + 1)}
-              className="group relative overflow-hidden rounded-lg text-left"
+              className="group relative overflow-hidden rounded-lg text-left border-2 border-[#7FAF9A]"
               aria-label={`Slayt ${i + 2}`}
             >
               <Image

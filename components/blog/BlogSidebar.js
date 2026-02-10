@@ -9,7 +9,11 @@ import { fetchBlogs } from "@/lib/api";
 
 export default function BlogSidebar({ categories, blogs }) {
   const [benzer, setBenzer] = useState([]);
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/popular`)
+      .then((r) => r.json())
+      .then(setPosts);
     async function load() {
       const cats = await fetchBlogs();
       setBenzer(cats);
@@ -22,7 +26,7 @@ export default function BlogSidebar({ categories, blogs }) {
       <aside className="space-y-8">
         <SocialFollowCard />
         <CategoriesCard categories={categories} />
-        <RelatedBlogs blogs={blogs} benzer={benzer} />
+        <RelatedBlogs post={posts} />
       </aside>
     </div>
   );

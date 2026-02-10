@@ -55,10 +55,10 @@ export default function FeaturedPostsSlider() {
       group flex flex-col h-full
       overflow-hidden rounded-2xl
       bg-[#F2F7F4]
-      border-4 border-green-400
+      border-4 border-[#7FAF9A]
       shadow-green-400
       transition
-      hover:shadow-[0_10px_28px_rgba(127,175,154,0.35)]
+      
     "
           >
             {/* IMAGE */}

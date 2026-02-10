@@ -11,7 +11,7 @@ export default function CategorySliderSection({ category, textColor }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((i) => (i + 1) % posts.length);
-    }, 5000); // 5 saniye
+    }, 3000); // 5 saniye
 
     return () => clearInterval(interval);
   }, [posts.length]);
@@ -52,8 +52,7 @@ export default function CategorySliderSection({ category, textColor }) {
           className="
   group relative overflow-hidden rounded-3xl lg:col-span-2
   bg-[#F2F7F4]
-  border-4 border-green-400
-  shadow-[0_8px_22px_rgba(34,197,94,0.35)]
+  border-4 border-[#7FAF9A]
   transition
   hover:shadow-[0_12px_32px_rgba(34,197,94,0.45)]
 "
@@ -86,8 +85,8 @@ export default function CategorySliderSection({ category, textColor }) {
               className="
   flex gap-3 rounded-xl p-3
   bg-[#F2F7F4]
-  border-4 border-green-400
-  shadow-[0_8px_22px_rgba(34,197,94,0.35)]
+  border-4 border-[#7FAF9A]
+
   transition
   hover:shadow-[0_12px_32px_rgba(34,197,94,0.45)]
 "
@@ -131,9 +130,15 @@ export default function CategorySliderSection({ category, textColor }) {
           <button
             key={i}
             onClick={() => setIndex(i)}
-            className={`text-sm font-semibold ${
-              i === index ? textColor.all : "text-black"
-            }`}
+            className={`
+      flex h-8 w-8 items-center justify-center
+      rounded-full
+      bg-gray-200
+      text-sm font-semibold
+      transition
+      hover:bg-gray-300
+      ${i === index ? textColor.all : "text-black"}
+    `}
           >
             {i + 1}
           </button>
