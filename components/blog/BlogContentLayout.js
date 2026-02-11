@@ -69,7 +69,7 @@ export default function BlogContentLayout({
           </div>
         )}
 
-        <div className="prose prose-lg mt-8 max-w-none">{children}</div>
+        <div className="blog-content  mt-8 max-w-none">{children}</div>
       </article>
     </main>
   );

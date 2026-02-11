@@ -112,7 +112,7 @@ export default async function BlogDetailPage({ params }) {
               <TableOfContents items={toc} />
 
               <div
-                className="prose prose-lg mt-8 max-w-none"
+                className="blog-content  mt-8 max-w-none"
                 dangerouslySetInnerHTML={{ __html: contentWithIds }}
               />
               <EmojiReactions blogId={blog.id} blogTitle={blog.title} />

@@ -9,9 +9,28 @@ body {
 :root {
   --blog-font-scale: 1;
 }
-
-.prose {
+.blog-content {
   font-size: calc(1rem * var(--blog-font-scale));
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6,
+.blog-content ul,
+.blog-content ol,
+.blog-content li,
+.blog-content blockquote,
+.blog-content p {
+  all: revert;
+}
+.blog-content blockquote {
+  border-left: 4px solid #10b981;
+  padding-left: 16px;
+  margin: 24px 0;
+  background: #f9fafb;
 }
 
 img {

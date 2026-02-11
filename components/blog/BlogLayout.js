@@ -20,7 +20,7 @@ export default function BlogLayout({ title, date, cover, children }) {
           {title}
         </h1>
 
-        <div className="prose prose-lg mt-8 max-w-none prose-h2:text-gray-900 prose-h3:text-gray-900 prose-a:text-emerald-600">
+        <div className="blog-content  mt-8 max-w-none blog-content-h2:text-gray-900 blog-content-h3:text-gray-900 blog-content-a:text-emerald-600">
           {children}
         </div>
       </article>

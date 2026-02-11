@@ -24,9 +24,9 @@ export default function BlogSidebar({ categories, blogs }) {
   return (
     <div className="sticky top-28 z-40 w-[320px]">
       <aside className="space-y-8">
-        <SocialFollowCard />
         <CategoriesCard categories={categories} />
         <RelatedBlogs post={posts} />
+        <SocialFollowCard />
       </aside>
     </div>
   );
