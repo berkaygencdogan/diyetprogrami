@@ -122,35 +122,20 @@ export default function EditBlogPage({ params }) {
 
       const data = await response.json();
 
-      // Sunucudan gelen path
-      const imagePath = data.location; // /uploads/blog/filename.jpg
+      const imagePath = data.location;
       const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${imagePath}`;
 
-      // Form'u güncelle
       setForm({ ...form, cover_image: imagePath });
 
-      // Preview için cache busting ekle
       const timestamp = Date.now();
       const previewUrl = `${fullUrl}?_=${timestamp}`;
 
       setImagePreview(previewUrl);
-      setImageError(false); // ✅ Hata state'ini sıfırla
-
-      // Hemen test et
-      const testResponse = await fetch(fullUrl, { method: "HEAD" });
-
-      if (testResponse.ok) {
-        alert("✅ Görsel başarıyla yüklendi ve erişilebilir!");
-      } else {
-        console.warn(
-          `⚠️ Görsel yüklendi ama erişilemiyor (${testResponse.status})`,
-        );
-        setImageError(true); // ✅ Hata olduğunu işaretle
-      }
+      setImageError(false);
     } catch (error) {
       console.error("❌ Resim yükleme hatası:", error);
       alert(error.message || "Resim yüklenirken bir hata oluştu");
-      setImageError(true); // ✅ Hata olduğunu işaretle
+      setImageError(true);
     } finally {
       setUploadingImage(false);
     }
