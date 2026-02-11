@@ -65,10 +65,15 @@ export default function Header() {
           {/* 1️⃣ USER VAR */}
           {user && (
             <>
-              <NavLink href="/programim">📊 Programım</NavLink>
+              {/* <NavLink href="/programim">📊 Programım</NavLink> */}
               <NavLink href="/favorilerim">❤️ Favorilerim</NavLink>
 
-              {user.role === "admin" && <NavLink href="/admin">Admin</NavLink>}
+              {user.role === "admin" && (
+                <>
+                  <NavLink href="/programim">📊 Programım</NavLink>
+                  <NavLink href="/admin">Admin</NavLink>
+                </>
+              )}
 
               <button
                 onClick={logout}
@@ -84,7 +89,7 @@ export default function Header() {
             programSetting === "public" &&
             favoriSetting === "public" && (
               <>
-                <NavLink href="/programim">📊 Programım</NavLink>
+                {/* <NavLink href="/programim">📊 Programım</NavLink> */}
                 <NavLink href="/favorilerim">❤️ Favorilerim</NavLink>
 
                 <NavLink href="/login">Giriş Yap</NavLink>
@@ -103,7 +108,7 @@ export default function Header() {
 
           {!user && programSetting === "public" && favoriSetting === "auth" && (
             <>
-              <NavLink href="/programim">📊 Programım</NavLink>
+              {/* <NavLink href="/programim">📊 Programım</NavLink> */}
               <NavLink href="/login">Giriş Yap</NavLink>
               <NavLink href="/register">Kayıt Ol</NavLink>
             </>
