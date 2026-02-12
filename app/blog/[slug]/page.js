@@ -23,6 +23,7 @@ import { generateTOC } from "@/lib/toc";
 import { fetchRenderedSeo } from "@/lib/seo";
 import VerticalAd from "@/components/ads/VerticalAd";
 import HorizontalAd from "@/components/ads/HorizontalAd";
+import Link from "next/link";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -100,7 +101,6 @@ export default async function BlogDetailPage({ params }) {
               author={blog.author_name}
               cover={blog.cover_image}
               content={linkedContent}
-              tags={blog.tags}
               views={blog.views}
               blog={blog}
             >
@@ -115,6 +115,32 @@ export default async function BlogDetailPage({ params }) {
                 className="blog-content  mt-8 max-w-none"
                 dangerouslySetInnerHTML={{ __html: contentWithIds }}
               />
+              {/* 🔖 TAGS */}
+              {blog.tags?.length > 0 && (
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {blog.tags.map((t) => (
+                    <Link
+                      key={t.id}
+                      href={`/tags/${t.slug}`}
+                      className="
+          px-4 py-2
+          text-sm font-medium
+          rounded-full
+          bg-gray-100
+          text-gray-700
+          hover:bg-emerald-50
+          hover:text-emerald-700
+          transition-all
+          duration-200
+          border border-gray-200
+          hover:border-emerald-200
+        "
+                    >
+                      #{t.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
               <EmojiReactions blogId={blog.id} blogTitle={blog.title} />
               <BlogComments comments={comments} />
               <CommentForm blogId={blog.id} />

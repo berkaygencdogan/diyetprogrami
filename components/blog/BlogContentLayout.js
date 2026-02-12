@@ -6,7 +6,6 @@ export default function BlogContentLayout({
   cover,
   author,
   content,
-  tags,
   children,
   views,
   blog,
@@ -53,21 +52,6 @@ export default function BlogContentLayout({
           <span>⏱ {readingTime} dk okuma</span>
           <span>👁 {views} okunma</span>
         </div>
-
-        {/* 🔖 TAGS */}
-        {tags?.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {tags.map((t) => (
-              <Link
-                key={t.id}
-                href={`/etiket/${t.slug}`}
-                className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
-              >
-                #{t.name}
-              </Link>
-            ))}
-          </div>
-        )}
 
         <div className="blog-content  mt-8 max-w-none">{children}</div>
       </article>

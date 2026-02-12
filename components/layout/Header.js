@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [user, setUser] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const router = useRouter();
   const ref = useRef(null);
 
