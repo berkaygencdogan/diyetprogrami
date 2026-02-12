@@ -2,6 +2,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 
 export default async function RootLayout({ children }) {
   const res = await fetch(
@@ -21,6 +22,7 @@ export default async function RootLayout({ children }) {
       >
         <Providers>
           <Header />
+          <AutoBreadcrumb />
           {children}
           <Footer />
         </Providers>

@@ -23,7 +23,7 @@ export default function HeroSlider({ slides }) {
   const active = slides[activeIndex];
 
   return (
-    <div className="mx-auto max-w-7xl px-4">
+    <div className="mx-auto max-w-7xl px-4 mt-15">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 ">
         {/* ================= LCP HERO ================= */}
         <Link
