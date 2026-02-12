@@ -125,7 +125,7 @@ export default function EditBlogPage({ params }) {
       const imagePath = data.location;
       const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}${imagePath}`;
 
-      setForm({ ...form, cover_image: imagePath });
+      setForm({ ...form, cover_image: fullUrl });
 
       const timestamp = Date.now();
       const previewUrl = `${fullUrl}?_=${timestamp}`;
